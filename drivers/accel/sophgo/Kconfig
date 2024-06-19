@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: GPL-2.0-only
+#
+# Sophgo TPU accelerators driver
+#
+
+config DRM_ACCEL_SOPHGO_CV1800
+	tristate "Sophgo CV18XX/SG200X TPU accelerators"
+	depends on DRM_ACCEL
+	depends on PCI && HAS_IOMEM
+	depends on ARCH_SOPHGO
+	help
+	  The user-space interface is described in
+	  include/uapi/drm/sophgo/cv1800_tpu_accel.h
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called habanalabs.
