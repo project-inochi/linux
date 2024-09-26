@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
+ */
+
+/dts-v1/;
+
+#include "sg2044.dtsi"
+
+/ {
+	model = "Sophgo SG2044 EVB 1.0";
+	compatible = "sophgo,sg2044-evb", "sophgo,sg2044";
+
+	aliases {
+		serial0 = &uart0;
+		serial1 = &uart1;
+		serial2 = &uart2;
+		serial3 = &uart3;
+	};
+
+	chosen {
+		bootargs = "console=ttyS1,115200n8 earlycon ignore_loglevel initrd=0x8b000000,32M no5lvl";
+		stdout-path = "serial1:115200n8";
+	};
+};
+
+&osc {
+	clock-frequency = <25000000>;
+};
+
+&uart1 {
+	status = "okay";
+};
