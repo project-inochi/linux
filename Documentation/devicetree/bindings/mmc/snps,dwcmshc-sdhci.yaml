@@ -23,6 +23,7 @@ properties:
           - sophgo,cv1800b-dwcmshc
           - sophgo,sg2002-dwcmshc
           - sophgo,sg2042-dwcmshc
+          - sophgo,sg2044-dwcmshc
           - thead,th1520-dwcmshc
 
   reg:
@@ -71,7 +72,9 @@ allOf:
       properties:
         compatible:
           contains:
-            const: sophgo,sg2042-dwcmshc
+            enum:
+              - sophgo,sg2042-dwcmshc
+              - sophgo,sg2044-dwcmshc
 
     then:
       properties:
