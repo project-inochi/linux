@@ -5,6 +5,8 @@
 
 /dts-v1/;
 
+#include <dt-bindings/leds/common.h>
+
 #include "sg2044.dtsi"
 
 / {
@@ -36,6 +38,19 @@
 	status = "okay";
 };
 
+&gmac0 {
+	phy-handle = <&phy0>;
+	phy-mode = "rgmii-id";
+	status = "okay";
+
+	mdio {
+		phy0: phy@0 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <0>;
+		};
+	};
+};
+
 &i2c1 {
 	status = "okay";
 
@@ -44,6 +59,13 @@
 		reg = <0x17>;
 		#thermal-sensor-cells = <1>;
 	};
+};
+
+&phy0 {
+	reset-gpios = <&porta 28 GPIO_ACTIVE_LOW>;
+	reset-assert-us = <10000>;
+	reset-deassert-us = <10000>;
+	rx-internal-delay-ps = <2050>;
 };
 
 &sd {
