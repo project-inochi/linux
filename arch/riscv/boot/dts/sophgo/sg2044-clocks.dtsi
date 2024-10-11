@@ -1,0 +1,90 @@
+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+/*
+ * Copyright (C) 2024 Inochi Amaoto <inochiama@outlook.com>
+ */
+
+#include <dt-bindings/clock/sophgo,sg2044-clk.h>
+
+&clk {
+	assigned-clocks = <&clk CLK_DIV_AP_CPU_NORMAL_FIXED>,
+			  <&clk CLK_DIV_RP_SYS_FIXED>,
+			  <&clk CLK_DIV_TPU_SYS_FIXED>,
+			  <&clk CLK_DIV_CC_GRP_SYS_FIXED>,
+			  <&clk CLK_DIV_SRC0_FIXED>,
+			  <&clk CLK_DIV_SRC1_FIXED>,
+
+			  <&clk CLK_MPLL2>,
+			  <&clk CLK_MPLL1>,
+
+			  <&clk CLK_DIV_AP_CPU_NORMAL_MAIN>,
+			  <&clk CLK_DIV_TPU_SYS_MAIN>,
+			  <&clk CLK_DIV_CC_GRP_SYS_MAIN>,
+			  <&clk CLK_DIV_SRC0_MAIN>,
+			  <&clk CLK_DIV_SRC1_MAIN>,
+
+			  <&clk CLK_DIV_TOP_50M>,
+			  <&clk CLK_DIV_TIMER1>,
+			  <&clk CLK_DIV_TIMER2>,
+			  <&clk CLK_DIV_TIMER3>,
+			  <&clk CLK_DIV_TIMER4>,
+			  <&clk CLK_DIV_TIMER5>,
+			  <&clk CLK_DIV_TIMER6>,
+			  <&clk CLK_DIV_TIMER7>,
+			  <&clk CLK_DIV_TIMER8>,
+			  <&clk CLK_DIV_PKA>,
+			  <&clk CLK_DIV_UART_500M>,
+			  <&clk CLK_DIV_EFUSE>,
+			  <&clk CLK_DIV_TX_ETH0>,
+			  <&clk CLK_DIV_PTP_REF_I_ETH0>,
+			  <&clk CLK_DIV_REF_ETH0>,
+			  <&clk CLK_DIV_EMMC>,
+			  <&clk CLK_DIV_SD>,
+			  <&clk CLK_DIV_TOP_AXI0>,
+			  <&clk CLK_DIV_SD_100K>,
+			  <&clk CLK_DIV_EMMC_100K>,
+			  <&clk CLK_DIV_GPIO_DB>,
+			  <&clk CLK_DIV_TOP_AXI_HSPERI>,
+			  <&clk CLK_DIV_CXP_MAC_FIXED>,
+			  <&clk CLK_DIV_PCIE_1G>;
+	assigned-clock-rates = <2000000000>,
+			       <2000000000>,
+			       <1000000000>,
+			       <2000000000>,
+			       <1050000000>,
+			       <900000000>,
+
+			       <1000000000>,
+			       <2000000000>,
+
+			       <2000000000>,
+			       <1000000000>,
+			       <2000000000>,
+			       <1050000000>,
+			       <900000000>,
+
+			       <50000000>,
+			       <50000000>,
+			       <50000000>,
+			       <50000000>,
+			       <50000000>,
+			       <50000000>,
+			       <50000000>,
+			       <50000000>,
+			       <50000000>,
+
+			       <1000000000>,
+			       <500000000>,
+			       <25000000>,
+			       <125000000>,
+			       <50000000>,
+			       <25000000>,
+			       <400000000>,
+			       <400000000>,
+			       <100000000>,
+			       <100000>,
+			       <100000>,
+			       <100000>,
+			       <250000000>,
+			       <1000000000>,
+			       <1000000000>;
+};
