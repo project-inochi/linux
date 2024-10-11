@@ -6,6 +6,7 @@
 /dts-v1/;
 
 #include "sg2044.dtsi"
+#include "sg2044-clocks.dtsi"
 
 / {
 	model = "Sophgo SG2044 EVB 1.0";
