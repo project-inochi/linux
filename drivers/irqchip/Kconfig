@@ -749,6 +749,20 @@ config MCHP_EIC
 	help
 	  Support for Microchip External Interrupt Controller.
 
+config PCIE_SOPHGO_MSI
+	bool "Sophgo PCIe MSI Controller"
+	depends on OF
+	depends on PCI
+	depends on PCI_MSI
+	select GENERIC_MSI_IRQ
+	select IRQ_MSI_LIB
+	help
+	  Say 'Y' here if you want kernel to support the Sophgo PCIe MSI
+	  controller driver. This controller is used to forward MSI
+	  interrupt of PCIe device to the onboard internal interrupt
+	  controller. This device is only needed when the interrupt
+	  controller has no MSI support.
+
 config SUNPLUS_SP7021_INTC
 	bool "Sunplus SP7021 interrupt controller" if COMPILE_TEST
 	default SOC_SP7021
