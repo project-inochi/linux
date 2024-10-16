@@ -308,6 +308,16 @@ config PCI_XGENE_MSI
 	  Say Y here if you want PCIe MSI support for the APM X-Gene v1 SoC.
 	  This MSI driver supports 5 PCIe ports on the APM X-Gene v1 SoC.
 
+config PCIE_SOPHGO_MSI
+	bool "Sophgo PCIe MSI bridge"
+	depends on OF
+	help
+	  Say 'Y' here if you want kernel to support the Sophgo PCIe MSI
+	  bridge driver. This bridge is used to forward MSI interrupt of
+	  PCIe device to the onboard internal interrupt controller. This
+	  device is only needed when the interrupt controller has no MSI
+	  support.
+
 config PCIE_XILINX
 	bool "Xilinx AXI PCIe controller"
 	depends on OF
