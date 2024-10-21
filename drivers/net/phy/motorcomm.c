@@ -240,6 +240,34 @@
  */
 #define YTPHY_WCR_TYPE_PULSE			BIT(0)
 
+#define YT8521_LED_GENERAL_CFG			0xA00B
+#define YT8521_LED_GENERAL_FORCE_MODE_MASK	GEMASK(0, 1)
+#define YT8521_LED_GENERAL_FORCE_MODE_MASK	GEMASK(0, 1)
+#define YT8521_LED_GENERAL_JABBER_LED_DIS	BIT(14)
+
+#define YT8521_LED0_CFG				0xA00C
+#define YT8521_LED1_CFG				0xA00D
+#define YT8521_LED2_CFG				0xA00E
+
+#define YT8521_MAX_LEDS				3
+
+#define YT8521_LED_BLINK_LINK_10		BIT(0)
+#define YT8521_LED_BLINK_LINK_100		BIT(1)
+#define YT8521_LED_BLINK_LINK_1000		BIT(2)
+#define YT8521_LED_BLINK_LINK_COLLISION		BIT(3)
+#define YT8521_LED_ON_LINK_10			BIT(4)
+#define YT8521_LED_ON_LINK_100			BIT(5)
+#define YT8521_LED_ON_LINK_1000			BIT(6)
+#define YT8521_LED_ON_RX			BIT(7)
+#define YT8521_LED_ON_TX			BIT(8)
+#define YT8521_LED_BLINK_RX			BIT(9)
+#define YT8521_LED_BLINK_TX			BIT(10)
+#define YT8521_LED_ON_HALF_DUPLEX		BIT(11)
+#define YT8521_LED_ON_FULL_DUPLEX		BIT(12)
+#define YT8521_LED_BLINK_TRAFFIC		BIT(13)
+
+#define YT8521_LED_BLINK_CFG			0xA00F
+
 #define YTPHY_PAD_DRIVE_STRENGTH_REG		0xA010
 #define YT8531_RGMII_RXC_DS_MASK		GENMASK(15, 13)
 #define YT8531_RGMII_RXD_DS_HI_MASK		BIT(12)		/* Bit 2 of rxd_ds */
@@ -1637,6 +1665,55 @@ static int yt8521_resume(struct phy_device *phydev)
 		return 0;
 
 	return yt8521_modify_utp_fiber_bmcr(phydev, BMCR_PDOWN, 0);
+}
+
+static int yt8521_led_hw_control_get(struct phy_device *phydev, u8 index,
+				     unsigned long *rules)
+{
+	int config, general_config;
+
+	if (index >= YT8521_MAX_LEDS)
+		return -EINVAL;
+
+	general_config = ytphy_read_ext_with_lock(phydev, YT8521_LED_GENERAL_CFG);
+	if (general_config < 0)
+		return general_config;
+
+	config = ytphy_read_ext_with_lock(phydev, YT8521_LED0_CFG + index);
+	if (config < 0)
+		return config;
+
+	*rules = 0;
+
+	return 0;
+}
+
+static const unsigned long yt8521_led_hw_compatibles = BIT(TRIGGER_NETDEV_LINK_10) |
+						       BIT(TRIGGER_NETDEV_LINK_100) |
+						       BIT(TRIGGER_NETDEV_LINK_1000) |
+						       BIT(TRIGGER_NETDEV_HALF_DUPLEX) |
+						       BIT(TRIGGER_NETDEV_FULL_DUPLEX) |
+						       BIT(TRIGGER_NETDEV_TX) |
+						       BIT(TRIGGER_NETDEV_RX);
+
+/**
+ * yt8521_led_hw_is_supported() - check the hw led compatibles
+ * @phydev: a pointer to a &struct phy_device
+ * @index: led index
+ * @rules: compatibles for checking
+ *
+ * returns 0 or negative errno code
+ */
+static int yt8521_led_hw_is_supported(struct phy_device *phydev, u8 index,
+				      unsigned long rules)
+{
+	if (index >= YT8521_MAX_LEDS)
+		return -EINVAL;
+
+	if (rules & ~yt8521_led_hw_compatibles)
+		return -EOPNOTSUPP;
+
+	return 0;
 }
 
 /**
