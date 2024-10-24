@@ -13,6 +13,7 @@ properties:
   compatible:
     enum:
       - sophgo,sg2042-pinctrl
+      - sophgo,sg2044-pinctrl
 
   reg:
     maxItems: 1
