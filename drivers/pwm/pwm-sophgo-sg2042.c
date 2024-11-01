@@ -15,6 +15,7 @@
  *   be stopped and the output is pulled to high.
  */
 
+#include <linux/cleanup.h>
 #include <linux/clk.h>
 #include <linux/err.h>
 #include <linux/io.h>
@@ -25,22 +26,26 @@
 
 #include <asm/div64.h>
 
-/*
- * Offset RegisterName
- * 0x0000 HLPERIOD0
- * 0x0004 PERIOD0
- * 0x0008 HLPERIOD1
- * 0x000C PERIOD1
- * 0x0010 HLPERIOD2
- * 0x0014 PERIOD2
- * 0x0018 HLPERIOD3
- * 0x001C PERIOD3
- * Four groups and every group is composed of HLPERIOD & PERIOD
- */
-#define SG2042_HLPERIOD(chan) ((chan) * 8 + 0)
-#define SG2042_PERIOD(chan) ((chan) * 8 + 4)
+#define REG_HLPERIOD		0x0
+#define REG_PERIOD		0x4
+#define REG_GROUP		0x8
+#define REG_POLARITY		0x40
+
+#define REG_PWMSTART		0x44
+#define REG_PWMUPDATE		0x4C
+#define REG_SHIFTCOUNT		0x80
+#define REG_SHIFTSTART		0x90
+#define REG_PWM_OE		0xD0
+
+#define PWM_REG_NUM		0x80
+
+#define PWM_POLARITY_MASK(n) BIT(n)
+#define SG2042_HLPERIOD(chan) ((chan) * REG_GROUP + REG_HLPERIOD)
+#define SG2042_PERIOD(chan) ((chan) * REG_GROUP + REG_PERIOD)
 
 #define SG2042_PWM_CHANNELNUM	4
+#define SG2044_PWM_DISABLE	0
+#define SG2044_PWM_ENABLE	1
 
 /**
  * struct sg2042_pwm_ddata - private driver data
@@ -50,6 +55,7 @@
 struct sg2042_pwm_ddata {
 	void __iomem *base;
 	unsigned long clk_rate_hz;
+	struct mutex lock;
 };
 
 static void pwm_sg2042_config(void __iomem *base, unsigned int chan, u32 period, u32 hlperiod)
@@ -58,20 +64,11 @@ static void pwm_sg2042_config(void __iomem *base, unsigned int chan, u32 period,
 	writel(hlperiod, base + SG2042_HLPERIOD(chan));
 }
 
-static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-			    const struct pwm_state *state)
+static int pwm_sg2042_set_period(struct sg2042_pwm_ddata *ddata, struct pwm_chip *chip,
+				 struct pwm_device *pwm, const struct pwm_state *state)
 {
-	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
 	u32 hlperiod;
 	u32 period;
-
-	if (state->polarity == PWM_POLARITY_INVERSED)
-		return -EINVAL;
-
-	if (!state->enabled) {
-		pwm_sg2042_config(ddata->base, pwm->hwpwm, 0, 0);
-		return 0;
-	}
 
 	/*
 	 * Period of High level (duty_cycle) = HLPERIOD x Period_clk
@@ -89,6 +86,69 @@ static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 		pwm->hwpwm, period, hlperiod);
 
 	pwm_sg2042_config(ddata->base, pwm->hwpwm, period, hlperiod);
+
+	return 0;
+}
+
+static void pwm_sg2044_enable(struct sg2042_pwm_ddata *ddata, struct pwm_device *pwm, bool enabled)
+{
+	u32 pwm_value;
+
+	pwm_value = readl(ddata->base + REG_PWMSTART);
+
+	if (enabled)
+		writel(pwm_value | BIT(pwm->hwpwm), ddata->base + REG_PWMSTART);
+	else
+		writel(pwm_value & ~BIT(pwm->hwpwm), ddata->base + REG_PWMSTART);
+}
+
+static void pwm_sg2044_set_outputenable(struct sg2042_pwm_ddata *ddata, struct pwm_device *pwm,
+					bool enabled)
+{
+	u32 pwm_value;
+
+	pwm_value = readl(ddata->base + REG_PWM_OE);
+
+	if (enabled)
+		writel(pwm_value | BIT(pwm->hwpwm), ddata->base + REG_PWM_OE);
+	else
+		writel(pwm_value & ~BIT(pwm->hwpwm), ddata->base + REG_PWM_OE);
+}
+
+static int pwm_sg2044_set_polarity(struct sg2042_pwm_ddata *ddata, struct pwm_device *pwm,
+				   const struct pwm_state *state)
+{
+	enum pwm_polarity polarity;
+	u32 pwm_value;
+
+	pwm_value = readl(ddata->base + REG_POLARITY);
+
+	polarity = state->polarity;
+
+	if (polarity == PWM_POLARITY_NORMAL)
+		pwm_value &= ~BIT(pwm->hwpwm);
+	else
+		pwm_value |= BIT(pwm->hwpwm);
+
+	writel(pwm_value, ddata->base + REG_POLARITY);
+
+	return 0;
+}
+
+static int pwm_sg2042_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+			    const struct pwm_state *state)
+{
+	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
+
+	if (state->polarity == PWM_POLARITY_INVERSED)
+		return -EINVAL;
+
+	if (!state->enabled) {
+		pwm_sg2042_config(ddata->base, pwm->hwpwm, 0, 0);
+		return 0;
+	}
+
+	pwm_sg2042_set_period(ddata, chip, pwm, state);
 
 	return 0;
 }
@@ -117,13 +177,45 @@ static int pwm_sg2042_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
 	return 0;
 }
 
+static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+			    const struct pwm_state *state)
+{
+	struct sg2042_pwm_ddata *ddata = pwmchip_get_drvdata(chip);
+
+	if (!state->enabled) {
+		pwm_sg2044_enable(ddata, pwm, SG2044_PWM_DISABLE);
+		return 0;
+	}
+
+	pwm_sg2044_set_polarity(ddata, pwm, state);
+
+	pwm_sg2042_set_period(ddata, chip, pwm, state);
+
+	guard(mutex)(&ddata->lock);
+
+	/*
+	 * re-enable PWMSTART to refresh the register period
+	 */
+	pwm_sg2044_enable(ddata, pwm, SG2044_PWM_DISABLE);
+	pwm_sg2044_set_outputenable(ddata, pwm, SG2044_PWM_ENABLE);
+	pwm_sg2044_enable(ddata, pwm, SG2044_PWM_ENABLE);
+
+	return 0;
+}
+
 static const struct pwm_ops pwm_sg2042_ops = {
 	.apply = pwm_sg2042_apply,
 	.get_state = pwm_sg2042_get_state,
 };
 
+static const struct pwm_ops pwm_sg2044_ops = {
+	.apply = pwm_sg2044_apply,
+	.get_state = pwm_sg2042_get_state,
+};
+
 static const struct of_device_id sg2042_pwm_ids[] = {
-	{ .compatible = "sophgo,sg2042-pwm" },
+	{ .compatible = "sophgo,sg2042-pwm", .data = &pwm_sg2042_ops },
+	{ .compatible = "sophgo,sg2044-pwm", .data = &pwm_sg2044_ops },
 	{ }
 };
 MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
@@ -131,16 +223,23 @@ MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
 static int pwm_sg2042_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
+	const struct pwm_ops *pwm_ops;
 	struct sg2042_pwm_ddata *ddata;
 	struct reset_control *rst;
 	struct pwm_chip *chip;
 	struct clk *clk;
 	int ret;
 
+	pwm_ops = device_get_match_data(dev);
+	if (!pwm_ops)
+		return -ENODEV;
+
 	chip = devm_pwmchip_alloc(dev, SG2042_PWM_CHANNELNUM, sizeof(*ddata));
 	if (IS_ERR(chip))
 		return PTR_ERR(chip);
 	ddata = pwmchip_get_drvdata(chip);
+
+	mutex_init(&ddata->lock);
 
 	ddata->base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(ddata->base))
@@ -168,8 +267,7 @@ static int pwm_sg2042_probe(struct platform_device *pdev)
 	if (ret)
 		return dev_err_probe(dev, ret, "failed to deassert\n");
 
-	chip->ops = &pwm_sg2042_ops;
-	chip->atomic = true;
+	chip->ops = pwm_ops;
 
 	ret = devm_pwmchip_add(dev, chip);
 	if (ret < 0) {
