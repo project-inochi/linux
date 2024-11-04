@@ -40,6 +40,7 @@
 #define PWM_MINHLPERIOD		1
 #define PWM_REG_NUM		0x80
 
+#define PWM_POLARITY_MASK(n) BIT(n)
 #define SG2042_HLPERIOD(chan) ((chan) * 8 + 0)
 #define SG2042_PERIOD(chan) ((chan) * 8 + 4)
 
@@ -124,12 +125,18 @@ static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 			    const struct pwm_state *state)
 {
 	struct pwm_ddata *ddata = pwmchip_get_drvdata(chip);
+	enum pwm_polarity polarity;
 	uint32_t pwm_value;
 	u32 hlperiod;
 	u32 period;
 
-	if (state->polarity == PWM_POLARITY_INVERSED)
-		return -EINVAL;
+	// if (state->polarity == PWM_POLARITY_INVERSED)
+	// 	return -EINVAL;
+
+	//关闭pwmstart
+	pwm_value = readl(ddata->base + REG_PWMSTART);
+
+	writel(pwm_value & (~(1 << (pwm->hwpwm))), ddata->base + REG_PWMSTART);
 
 	if (!state->enabled) {
 		pwm_sophgo_config(ddata->base, pwm->hwpwm, PWM_MINPERIOD, PWM_MINHLPERIOD);
@@ -153,9 +160,18 @@ static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 
 	pwm_sophgo_config(ddata->base, pwm->hwpwm, period, hlperiod);
 
-	pwm_value = readl(ddata->base + REG_PWMSTART);
+	pr_info("period=%d, hlperiod=%d\n", period, hlperiod);
 
-	writel(pwm_value & (~(1 << (pwm->hwpwm))), ddata->base + REG_PWMSTART);
+	pwm_value = readl(ddata->base + REG_POLARITY);
+
+	if (polarity == PWM_POLARITY_NORMAL)
+		pwm_value &= ~(1 << pwm->hwpwm);
+	else
+		pwm_value |= 1 << pwm->hwpwm;
+	
+	writel(pwm_value, ddata->base + REG_POLARITY);
+
+	pwm_value = readl(ddata->base + REG_PWMSTART);
 
 	pwm_value |= (1 << pwm->hwpwm);
 
@@ -200,7 +216,7 @@ static const struct pwm_ops pwm_sg2044_ops = {
 };
 
 static const struct of_device_id sg2042_pwm_ids[] = {
-	{ .compatible = "sophgo,sg2042-pwm" },
+	{ .compatible = "sophgo,sg2042-pwm", .data = &pwm_sg2042_ops },
 	{ .compatible = "sophgo,sg2044-pwm", .data = &pwm_sg2044_ops },
 	{ }
 };
@@ -209,11 +225,16 @@ MODULE_DEVICE_TABLE(of, sg2042_pwm_ids);
 static int pwm_sg2042_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
+	const struct pwm_ops *pwm_ops;
 	struct pwm_ddata *ddata;
 	struct reset_control *rst;
 	struct pwm_chip *chip;
 	struct clk *clk;
 	int ret;
+
+	pwm_ops = device_get_match_data(dev);
+	if (!pwm_ops)
+		return dev_err_probe(dev, ret, "failed to get pwm_ops\n");
 
 	chip = devm_pwmchip_alloc(dev, SG2042_PWM_CHANNELNUM, sizeof(*ddata));
 	if (IS_ERR(chip))
@@ -246,7 +267,7 @@ static int pwm_sg2042_probe(struct platform_device *pdev)
 	if (ret)
 		return dev_err_probe(dev, ret, "failed to deassert\n");
 
-	chip->ops = &pwm_sg2042_ops;
+	chip->ops = pwm_ops;
 	chip->atomic = true;
 
 	ret = devm_pwmchip_add(dev, chip);
