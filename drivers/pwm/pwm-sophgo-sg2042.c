@@ -130,6 +130,8 @@ static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	u32 hlperiod;
 	u32 period;
 
+	polarity = state->polarity;
+
 	// if (state->polarity == PWM_POLARITY_INVERSED)
 	// 	return -EINVAL;
 
@@ -233,8 +235,6 @@ static int pwm_sg2042_probe(struct platform_device *pdev)
 	int ret;
 
 	pwm_ops = device_get_match_data(dev);
-	if (!pwm_ops)
-		return dev_err_probe(dev, ret, "failed to get pwm_ops\n");
 
 	chip = devm_pwmchip_alloc(dev, SG2042_PWM_CHANNELNUM, sizeof(*ddata));
 	if (IS_ERR(chip))
