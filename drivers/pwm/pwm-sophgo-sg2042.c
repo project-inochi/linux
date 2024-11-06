@@ -130,11 +130,6 @@ static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	u32 hlperiod;
 	u32 period;
 
-	polarity = state->polarity;
-
-	// if (state->polarity == PWM_POLARITY_INVERSED)
-	// 	return -EINVAL;
-
 	//关闭pwmstart
 	pwm_value = readl(ddata->base + REG_PWMSTART);
 
@@ -165,6 +160,7 @@ static int pwm_sg2044_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 	pr_info("period=%d, hlperiod=%d\n", period, hlperiod);
 
 	pwm_value = readl(ddata->base + REG_POLARITY);
+	polarity = state->polarity;
 
 	if (polarity == PWM_POLARITY_NORMAL)
 		pwm_value &= ~(1 << pwm->hwpwm);
