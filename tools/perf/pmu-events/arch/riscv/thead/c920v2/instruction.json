@@ -1,5 +1,25 @@
 [
   {
+    "EventName": "INST_BRANCH_MISPREDICT",
+    "EventCode": "0x00000006",
+    "BriefDescription": "Mispredicted branch instructions"
+  },
+  {
+    "EventName": "INST_BRANCH",
+    "EventCode": "0x00000007",
+    "BriefDescription": "Retired branch instructions"
+  },
+  {
+    "EventName": "INST_JMP_MISPREDICT",
+    "EventCode": "0x00000008",
+    "BriefDescription": "Indirect branch mispredict"
+  },
+  {
+    "EventName": "INST_JMP",
+    "EventCode": "0x00000009",
+    "BriefDescription": "Retired jmp instructions"
+  },
+  {
     "EventName": "INST_STORE",
     "EventCode": "0x0000000b",
     "BriefDescription": "Retired store instructions"
