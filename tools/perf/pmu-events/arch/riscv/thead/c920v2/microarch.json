@@ -1,31 +1,11 @@
 [
   {
-    "EventName": "CONDITIONAL_BRANCH_MISPREDICT",
-    "EventCode": "0x00000006",
-    "BriefDescription": "Mispredicted conditional branch count"
-  },
-  {
-    "EventName": "CONDITIONAL_BRANCH",
-    "EventCode": "0x00000007",
-    "BriefDescription": "conditional branch count"
-  },
-  {
-    "EventName": "INDIRECT_BRANCH_MISPREDICT",
-    "EventCode": "0x00000008",
-    "BriefDescription": "Mispredicted indirect branch count"
-  },
-  {
-    "EventName": "INDIRECT_BRANCH",
-    "EventCode": "0x00000009",
-    "BriefDescription": "Indirect branch count"
-  },
-  {
     "EventName": "LSU_SPEC_FAIL",
     "EventCode": "0x0000000a",
     "BriefDescription": "LSU speculation fail"
   },
   {
-    "EventName": "IDU_RF_PIPE_FAIL",
+    "EventName": "IDU_RF_LAUNCH_FAIL",
     "EventCode": "0x00000014",
     "BriefDescription": "Instruction decode unit launch pipeline failed in RF state"
   },
@@ -63,18 +43,18 @@
   {
     "EventName": "BRANCH_DIRECTION_MISPREDICTION",
     "EventCode": "0x0000001b",
-    "BriefDescription": "Branch misprediction in BTB"
+    "BriefDescription": "Branch misprediction in IFU"
   },
   {
     "EventName": "BRANCH_DIRECTION_PREDICTION",
     "EventCode": "0x0000001c",
-    "BriefDescription": "All branch prediction in BTB",
-    "PublicDescription": "This event including both successful prediction and failed prediction in BTB"
+    "BriefDescription": "All branch prediction in IFU",
+    "PublicDescription": "This event including both successful prediction and failed prediction in IFU"
   },
   {
     "EventName": "INTERRUPT_ACK_COUNT",
     "EventCode": "0x00000023",
-    "BriefDescription": "acknowledged interrupt count"
+    "BriefDescription": "Acknowledged interrupt count"
   },
   {
     "EventName": "INTERRUPT_OFF_CYCLE",
@@ -83,18 +63,18 @@
     "PublicDescription": "The arbitration time is recorded while meeting any of the following:\n- CPU is M-mode and MIE == 0\n- CPU is S-mode and delegation and SIE == 0\n"
   },
   {
-    "EventName": "IFU_STALLED_CYCLE",
+    "EventName": "STALLED_CYCLE_FRONTEND",
     "EventCode": "0x00000027",
-    "BriefDescription": "Number of stall cycles of the instruction fetch unit (IFU)."
+    "BriefDescription": "Stalled cycles of the instruction fetch unit (IFU) and instruction decoding unit (IDU)."
   },
   {
-    "EventName": "IDU_STALLED_CYCLE",
+    "EventName": "STALLED_CYCLE_BACKEND",
     "EventCode": "0x00000028",
-    "BriefDescription": "hpcp_backend_stall Number of stall cycles of the instruction decoding unit (IDU) and next-level pipeline unit."
+    "BriefDescription": "Stalled cycles of the instruction scheduler and next-level pipeline unit"
   },
   {
-    "EventName": "SYNC_STALL",
+    "EventName": "STALLED_CYCLE_SYNC",
     "EventCode": "0x00000029",
-    "BriefDescription": "Sync instruction stall cycle fence/fence.i/sync/sfence"
+    "BriefDescription": "Stalled cycles for sync instruction fence/fence.i/sync/sfence"
   }
 ]
