@@ -1,0 +1,132 @@
+[
+  {
+    "EventName": "INST_STORE",
+    "EventCode": "0x0000000b",
+    "BriefDescription": "Retired store instructions"
+  },
+  {
+    "EventName": "INST_ALU",
+    "EventCode": "0x0000001d",
+    "BriefDescription": "Retired ALU instructions"
+  },
+  {
+    "EventName": "INST_VECTOR",
+    "EventCode": "0x0000001f",
+    "BriefDescription": "Retired Vector instructions"
+  },
+  {
+    "EventName": "INST_CSR",
+    "EventCode": "0x00000020",
+    "BriefDescription": "Retired CSR instructions"
+  },
+  {
+    "EventName": "INST_SYNC",
+    "EventCode": "0x00000021",
+    "BriefDescription": "Retired sync instructions (AMO/LR/SC instructions)"
+  },
+  {
+    "EventName": "INST_ECALL",
+    "EventCode": "0x00000025",
+    "BriefDescription": "Retired ecall instructions"
+  },
+  {
+    "EventName": "INST_LONG_JP",
+    "EventCode": "0x00000026",
+    "BriefDescription": "Retired long jump instructions"
+  },
+  {
+    "EventName": "INST_FP",
+    "EventCode": "0x0000002a",
+    "BriefDescription": "Retired FPU instructions"
+  },
+  {
+    "EventName": "INST_LOAD",
+    "EventCode": "0x00000030",
+    "BriefDescription": "Retired load instructions"
+  },
+  {
+    "EventName": "INST_FUSED",
+    "EventCode": "0x00000031",
+    "BriefDescription": "Retired fused instructions"
+  },
+  {
+    "EventName": "INST_MULT",
+    "EventCode": "0x00000032",
+    "BriefDescription": "Retired MULT instructions"
+  },
+  {
+    "EventName": "INST_DIV",
+    "EventCode": "0x00000033",
+    "BriefDescription": "Retired DIV instructions"
+  },
+  {
+    "EventName": "INST_BRANCH",
+    "EventCode": "0x00000036",
+    "BriefDescription": "Retired branch instructions"
+  },
+  {
+    "EventName": "INST_UNALIGN_LOAD",
+    "EventCode": "0x0000003d",
+    "BriefDescription": "Retired unalign load instructions"
+  },
+  {
+    "EventName": "INST_UNALIGN_STORE",
+    "EventCode": "0x0000003e",
+    "BriefDescription": "Retired unalign store instructions"
+  },
+  {
+    "EventName": "INST_LR",
+    "EventCode": "0x0000003f",
+    "BriefDescription": "Retired LR instructions"
+  },
+  {
+    "EventName": "INST_SC",
+    "EventCode": "0x00000040",
+    "BriefDescription": "Retired SC instructions"
+  },
+  {
+    "EventName": "INST_AMO",
+    "EventCode": "0x00000041",
+    "BriefDescription": "Retired AMO instructions"
+  },
+  {
+    "EventName": "INST_BARRIER",
+    "EventCode": "0x00000042",
+    "BriefDescription": "Retired barrier instructions"
+  },
+  {
+    "EventName": "INST_FAILED_SC",
+    "EventCode": "0x00000043",
+    "BriefDescription": "Failed SC Instruction"
+  },
+  {
+    "EventName": "INST_FP_DIV",
+    "EventCode": "0x00000045",
+    "BriefDescription": "Retired Floating-Point DIV Instruction"
+  },
+  {
+    "EventName": "INST_FP_LOAD",
+    "EventCode": "0x00000046",
+    "BriefDescription": "Retired Floating-Point load Instruction"
+  },
+  {
+    "EventName": "INST_FP_STORE",
+    "EventCode": "0x00000047",
+    "BriefDescription": "Retired Floating-Point store Instruction"
+  },
+  {
+    "EventName": "INST_VECTOR_DIV",
+    "EventCode": "0x00000048",
+    "BriefDescription": "Retired Vector DIV Instruction"
+  },
+  {
+    "EventName": "INST_VECTOR_LOAD",
+    "EventCode": "0x00000049",
+    "BriefDescription": "Retired Vector load Instruction"
+  },
+  {
+    "EventName": "INST_VECTOR_STORE",
+    "EventCode": "0x0000004a",
+    "BriefDescription": "Retired Vector store Instruction"
+  }
+]

@@ -1,0 +1,97 @@
+[
+  {
+    "EventName": "L1_ICACHE_ACCESS",
+    "EventCode": "0x00000001",
+    "BriefDescription": "L1 instruction cache access"
+  },
+  {
+    "EventName": "L1_ICACHE_MISS",
+    "EventCode": "0x00000002",
+    "BriefDescription": "L1 instruction cache miss"
+  },
+  {
+    "EventName": "ITLB_MISS",
+    "EventCode": "0x00000003",
+    "BriefDescription": "I-UTLB miss"
+  },
+  {
+    "EventName": "JTLB_MISS",
+    "EventCode": "0x00000005",
+    "BriefDescription": "JTLB miss"
+  },
+  {
+    "EventName": "L1_DCACHE_READ_ACCESS",
+    "EventCode": "0x0000000c",
+    "BriefDescription": "L1-dcache read access"
+  },
+  {
+    "EventName": "L1_DCACHE_WRITE_ACCESS",
+    "EventCode": "0x0000000e",
+    "BriefDescription": "L1 data cache write access"
+  },
+  {
+    "EventName": "L1_DCACHE_WRITE_MISS",
+    "EventCode": "0x0000000f",
+    "BriefDescription": "L1 data cache write miss"
+  },
+  {
+    "EventName": "L1_DCACHE_ACCESS",
+    "EventCode": "0x0000009b",
+    "BriefDescription": "L1 data cache access"
+  },
+  {
+    "EventName": "L1_DCACHE_MISS",
+    "EventCode": "0x0000009c",
+    "BriefDescription": "L1 data cache miss"
+  },
+  {
+    "EventName": "L1_DCACHE_EXCLUSIVE_EVICTION",
+    "EventCode": "0x0000009d",
+    "BriefDescription": "L1 data cache exclusive eviction"
+  },
+  {
+    "EventName": "L1_ICACHE_PREFETCH",
+    "EventCode": "0x0000009e",
+    "BriefDescription": "L1 instruction cache prefetch"
+  },
+  {
+    "EventName": "L1_DCACHE_AMR",
+    "EventCode": "0x0000009f",
+    "BriefDescription": "L1 data cache adaptive write allocation"
+  },
+  {
+    "EventName": "L1_ICACHE_PREFETCH_MISS",
+    "EventCode": "0x000000a0",
+    "BriefDescription": "L1 instruction cache prefetch miss"
+  },
+  {
+    "EventName": "L1_DCACHE_REFILL_PREFETCH",
+    "EventCode": "0x000000a1",
+    "BriefDescription": "L1 data cache refill caused by prefetch"
+  },
+  {
+    "EventName": "L1_DCACHE_HIT_PREFETCH",
+    "EventCode": "0x000000a2",
+    "BriefDescription": "L1 data cache hit caused by prefetch"
+  },
+  {
+    "EventName": "DTLB_WRITE_MISS",
+    "EventCode": "0x000000a3",
+    "BriefDescription": "D-tlb write miss"
+  },
+  {
+    "EventName": "DTLB_ACCESS_MISS",
+    "EventCode": "0x000000a4",
+    "BriefDescription": "D-tlb access miss"
+  },
+  {
+    "EventName": "L2_CACHE_ACCESS",
+    "EventCode": "0x000000a5",
+    "BriefDescription": "L2 cache access"
+  },
+  {
+    "EventName": "L2_CACHE_MISS",
+    "EventCode": "0x000000a6",
+    "BriefDescription": "L2 cache miss"
+  }
+]
