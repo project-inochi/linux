@@ -1,0 +1,602 @@
+[
+  {
+    "EventName": "CONDITIONAL_BRANCH_MISPREDICT",
+    "EventCode": "0x00000006",
+    "BriefDescription": "Mispredicted conditional branch count"
+  },
+  {
+    "EventName": "CONDITIONAL_BRANCH",
+    "EventCode": "0x00000007",
+    "BriefDescription": "Conditional branch count"
+  },
+  {
+    "EventName": "INDIRECT_BRANCH_MISPREDICT",
+    "EventCode": "0x00000008",
+    "BriefDescription": "Mispredicted indirect branch count"
+  },
+  {
+    "EventName": "INDIRECT_BRANCH",
+    "EventCode": "0x00000009",
+    "BriefDescription": "Indirect branch count"
+  },
+  {
+    "EventName": "L1 DATA CACHE READ ACCESS",
+    "EventCode": "0x0000000d",
+    "BriefDescription": "L1 data cache read miss"
+  },
+  {
+    "EventName": "ISSUE_INSTRUCTION",
+    "EventCode": "0x00000016",
+    "BriefDescription": "issue instruction count"
+  },
+  {
+    "EventName": "BRANCH_TARGET_MISPREDICTION",
+    "EventCode": "0x0000001b",
+    "BriefDescription": "Branch misprediction in IFU"
+  },
+  {
+    "EventName": "BRANCH_TARGET_PREDICTION",
+    "EventCode": "0x0000001c",
+    "BriefDescription": "All branch prediction in IFU"
+  },
+  {
+    "EventName": "INTERRUPT_ACK_COUNT",
+    "EventCode": "0x00000023",
+    "BriefDescription": "Acknowledged interrupt count"
+  },
+  {
+    "EventName": "STALLED_CYCLE_FRONTEND",
+    "EventCode": "0x00000027",
+    "BriefDescription": "Stalled cycles of the instruction fetch unit (IFU) and instruction decoding unit (IDU)"
+  },
+  {
+    "EventName": "STALLED_CYCLE_BACKEND",
+    "EventCode": "0x00000028",
+    "BriefDescription": "Stalled cycles of the instruction scheduler and next-level pipeline unit"
+  },
+  {
+    "EventName": "STALLED_CYCLE_SYNC",
+    "EventCode": "0x00000029",
+    "BriefDescription": "Stalled cycles for sync instruction fence/fence.i/sync/sfence"
+  },
+  {
+    "EventName": "CYCLE_M",
+    "EventCode": "0x0000002b",
+    "BriefDescription": "M Mode Cycles"
+  },
+  {
+    "EventName": "CYCLE_S",
+    "EventCode": "0x0000002c",
+    "BriefDescription": "S Mode Cycles"
+  },
+  {
+    "EventName": "CYCLE_U",
+    "EventCode": "0x0000002d",
+    "BriefDescription": "U Mode Cycles"
+  },
+  {
+    "EventName": "EXCEPTION_ACK_COUNT",
+    "EventCode": "0x0000002e",
+    "BriefDescription": "Acknowledged exception count"
+  },
+  {
+    "EventName": "FLUSH",
+    "EventCode": "0x0000002f",
+    "BriefDescription": "Flush count"
+  },
+  {
+    "EventName": "MULT_INNER_FORWARD",
+    "EventCode": "0x00000034",
+    "BriefDescription": "Mult Inner Forward"
+  },
+  {
+    "EventName": "DIV_BUFFER_HIT",
+    "EventCode": "0x00000035",
+    "BriefDescription": "DIV Buffer Hit"
+  },
+  {
+    "EventName": "UNCONDITIONAL_BRANCH",
+    "EventCode": "0x00000037",
+    "BriefDescription": "Uncondition branch count"
+  },
+  {
+    "EventName": "BRANCH_MISPREDICT",
+    "EventCode": "0x00000038",
+    "BriefDescription": "Mispredicted branch count"
+  },
+  {
+    "EventName": "UNCONDITIONAL_BRANCH_MISPREDICT",
+    "EventCode": "0x00000039",
+    "BriefDescription": "Mispredicted uncondition branch count"
+  },
+  {
+    "EventName": "TAKEN_BRANCH_MISPREDICT",
+    "EventCode": "0x0000003a",
+    "BriefDescription": "Mispredicted taken branch count"
+  },
+  {
+    "EventName": "TAKEN_CONDITION_BRANCH",
+    "EventCode": "0x0000003b",
+    "BriefDescription": "Taken condition branch count"
+  },
+  {
+    "EventName": "TAKEN_CONDITION_BRANCH_MISPREDICT",
+    "EventCode": "0x0000003c",
+    "BriefDescription": "Mispredicted condition taken branch count"
+  },
+  {
+    "EventName": "BUS_BARRIER",
+    "EventCode": "0x00000044",
+    "BriefDescription": "Bus Barrier"
+  },
+  {
+    "EventName": "VECTOR_MICROOPS",
+    "EventCode": "0x0000004b",
+    "BriefDescription": "Vector MicroOps"
+  },
+  {
+    "EventName": "ECC_INTERRUPT_COUNT",
+    "EventCode": "0x0000004c",
+    "BriefDescription": "ECC Interrupt count"
+  },
+  {
+    "EventName": "ASYNC_ABORT_INTERRUPT_COUNT",
+    "EventCode": "0x0000004d",
+    "BriefDescription": "Async Abort Interrupt count"
+  },
+  {
+    "EventName": "IF_STALL",
+    "EventCode": "0x0000004e",
+    "BriefDescription": "Instruction fetch stage stall time"
+  },
+  {
+    "EventName": "IP_STALL",
+    "EventCode": "0x0000004f",
+    "BriefDescription": "Instruction pack stage stall time"
+  },
+  {
+    "EventName": "IB_STALL",
+    "EventCode": "0x00000050",
+    "BriefDescription": "Instruction buffer stage stall time"
+  },
+  {
+    "EventName": "IF_STALL_REFILL",
+    "EventCode": "0x00000051",
+    "BriefDescription": "Instruction fetch stall time for refill"
+  },
+  {
+    "EventName": "IF_STALL_MMU",
+    "EventCode": "0x00000052",
+    "BriefDescription": "Instruction fetch stall time for MMU"
+  },
+  {
+    "EventName": "IB_STALL_MISPREDICT",
+    "EventCode": "0x00000053",
+    "BriefDescription": "Instruction buffer stall time for mispredict"
+  },
+  {
+    "EventName": "IB_STALL_FIFO",
+    "EventCode": "0x00000054",
+    "BriefDescription": "Instruction buffer stall time for fifo"
+  },
+  {
+    "EventName": "IB_STALL_IND_BTB_RD",
+    "EventCode": "0x00000055",
+    "BriefDescription": "Instruction buffer stall time for indirect BTB read"
+  },
+  {
+    "EventName": "IB_STALL_VSETVL",
+    "EventCode": "0x00000056",
+    "BriefDescription": "Instruction buffer stall time for VSETVL"
+  },
+  {
+    "EventName": "ID_STALL",
+    "EventCode": "0x00000057",
+    "BriefDescription": "Instruction decode stage stall time"
+  },
+  {
+    "EventName": "RF_STALL",
+    "EventCode": "0x00000058",
+    "BriefDescription": "Register file stage stall time"
+  },
+  {
+    "EventName": "EU_STALL",
+    "EventCode": "0x00000059",
+    "BriefDescription": "Execute unit stage stall time"
+  },
+  {
+    "EventName": "ID_INST_PIPEDOWN",
+    "EventCode": "0x0000005a",
+    "BriefDescription": "Instruction decode stage instruction pipedown time"
+  },
+  {
+    "EventName": "RF_INST_PIPEDOWN",
+    "EventCode": "0x0000005b",
+    "BriefDescription": "Register file instruction pipedown"
+  },
+  {
+    "EventName": "ID_ONE_INST_PIPEDOWN",
+    "EventCode": "0x0000005c",
+    "BriefDescription": "Instruction decode stage one instruction pipedown time"
+  },
+  {
+    "EventName": "ID_STALL_CSR_BEFORE_FENCE",
+    "EventCode": "0x0000005d",
+    "BriefDescription": "Instruction decode stall time for CSR before fence"
+  },
+  {
+    "EventName": "ID_STALL_VSETVL_FOF",
+    "EventCode": "0x0000005e",
+    "BriefDescription": "Instruction decode stall time for VSETVL Fof"
+  },
+  {
+    "EventName": "ID_STALL_FLUSH",
+    "EventCode": "0x0000005f",
+    "BriefDescription": "Instruction decode stall time for flush"
+  },
+  {
+    "EventName": "ID_STALL_MISPREDICTION",
+    "EventCode": "0x00000060",
+    "BriefDescription": "Instruction decode stall time for Misprediction"
+  },
+  {
+    "EventName": "ID_STALL_IID_NOT_VALID",
+    "EventCode": "0x00000061",
+    "BriefDescription": "Instruction decode stall time for IID not valid"
+  },
+  {
+    "EventName": "RF_ONE_INST_PIPEDOWN",
+    "EventCode": "0x00000062",
+    "BriefDescription": "RF One Inst pipedown"
+  },
+  {
+    "EventName": "RF_STALL_RAW",
+    "EventCode": "0x00000063",
+    "BriefDescription": "Register file stall time for read-after-write"
+  },
+  {
+    "EventName": "RF_STALL_WAW",
+    "EventCode": "0x00000064",
+    "BriefDescription": "Register file stall time for write-after-write"
+  },
+  {
+    "EventName": "RF_STALL_STRUCTURE",
+    "EventCode": "0x00000065",
+    "BriefDescription": "Register file stall time for structure"
+  },
+  {
+    "EventName": "RF_STALL_CSR_AFTER_FENCE",
+    "EventCode": "0x00000066",
+    "BriefDescription": "Register file stall time for CSR after fence"
+  },
+  {
+    "EventName": "EU_IU_FULL",
+    "EventCode": "0x00000067",
+    "BriefDescription": "Instruction execution unit IU pipe full"
+  },
+  {
+    "EventName": "EU_IU_CONTROL_FULL",
+    "EventCode": "0x00000068",
+    "BriefDescription": "Instruction execution unit IU control pipe full"
+  },
+  {
+    "EventName": "EU_CP0_FULL",
+    "EventCode": "0x00000069",
+    "BriefDescription": "Instruction execution unit CP0 pipe full"
+  },
+  {
+    "EventName": "EU_LSU_LOAD_FULL",
+    "EventCode": "0x0000006a",
+    "BriefDescription": "Instruction execution unit LSU load pipe full"
+  },
+  {
+    "EventName": "EU_LSU_STORE_FULL",
+    "EventCode": "0x0000006b",
+    "BriefDescription": "Instruction execution unit LSU store pipe full"
+  },
+  {
+    "EventName": "EU_VFPU_FULL",
+    "EventCode": "0x0000006c",
+    "BriefDescription": "Instruction execution unit VFPU pipe full"
+  },
+  {
+    "EventName": "EU_BJU_FULL",
+    "EventCode": "0x0000006d",
+    "BriefDescription": "Instruction execution unit BJU pipe full"
+  },
+  {
+    "EventName": "IU_PIPE0_STALL_DISPATCH",
+    "EventCode": "0x0000006e",
+    "BriefDescription": "Integer unit pipe0 stall for dispatch"
+  },
+  {
+    "EventName": "IU_PIPE0_STALL_MULT",
+    "EventCode": "0x0000006f",
+    "BriefDescription": "Integer unit pipe0 stall for MULT"
+  },
+  {
+    "EventName": "IU_PIPE0_STALL_DIV_EX1",
+    "EventCode": "0x00000070",
+    "BriefDescription": "Integer unit pipe0 stall for DIV stage EX1"
+  },
+  {
+    "EventName": "IU_PIPE1_STALL_DISPATCH",
+    "EventCode": "0x00000071",
+    "BriefDescription": "Integer unit pipe1 stall for dispatch"
+  },
+  {
+    "EventName": "IU_PIPE1_STALL_MULT",
+    "EventCode": "0x00000072",
+    "BriefDescription": "Integer unit pipe1 stall for MULT"
+  },
+  {
+    "EventName": "IU_PIPE1_STALL_DIV_EX1",
+    "EventCode": "0x00000073",
+    "BriefDescription": "Integer unit pipe1 stall for DIV stage EX1"
+  },
+  {
+    "EventName": "IU_PIPE0_DISPATCH_WB_CONFLICT",
+    "EventCode": "0x00000074",
+    "BriefDescription": "Integer unit pipe0 dispatch writeback conflict"
+  },
+  {
+    "EventName": "IU_PIPE0_DISPATCH_STALL_WAW",
+    "EventCode": "0x00000075",
+    "BriefDescription": "Integer unit pipe0 dispatch stall for write-after-write"
+  },
+  {
+    "EventName": "IU_PIPE0_DISPATCH_UNCOMMIT",
+    "EventCode": "0x00000076",
+    "BriefDescription": "Integer unit pipe0 uncommitted dispatch"
+  },
+  {
+    "EventName": "IU_PIPE1_DISPATCH_WB_CONFLICT",
+    "EventCode": "0x00000077",
+    "BriefDescription": "Integer unit pipe1 dispatch writeback conflict"
+  },
+  {
+    "EventName": "IU_PIPE1_DISPATCH_STALL_WAW",
+    "EventCode": "0x00000078",
+    "BriefDescription": "Integer unit pipe1 dispatch stall for write-after-write"
+  },
+  {
+    "EventName": "IU_PIPE1_DISPATCH_UNCOMMIT",
+    "EventCode": "0x00000079",
+    "BriefDescription": "Integer unit pipe1 uncommitted dispatch"
+  },
+  {
+    "EventName": "IU_MULT_UNCOMMIT",
+    "EventCode": "0x0000007a",
+    "BriefDescription": "Integer unit uncommitted MULT"
+  },
+  {
+    "EventName": "IU_STALL_MULT_WB",
+    "EventCode": "0x0000007b",
+    "BriefDescription": "Integer unit stall time for MULT writeback"
+  },
+  {
+    "EventName": "IU_DIV_UNCOMMIT",
+    "EventCode": "0x0000007c",
+    "BriefDescription": "Integer unit uncommitted DIV"
+  },
+  {
+    "EventName": "IU_STALL_DIV_WB",
+    "EventCode": "0x0000007d",
+    "BriefDescription": "Integer unit stall time for  DIV writeback"
+  },
+  {
+    "EventName": "LSU_STALL_LOAD_WAW",
+    "EventCode": "0x0000007e",
+    "BriefDescription": "LSU stall time for load write-after-write"
+  },
+  {
+    "EventName": "LSU_STALL_LOAD_COMMIT",
+    "EventCode": "0x0000007f",
+    "BriefDescription": "LSU stall time for load commit"
+  },
+  {
+    "EventName": "LSU_STALL_LOAD_RAW",
+    "EventCode": "0x00000080",
+    "BriefDescription": "LSU stall time for load read-after-write"
+  },
+  {
+    "EventName": "LSU_STALL_STORE_COMMIT",
+    "EventCode": "0x00000081",
+    "BriefDescription": "LSU stall time for store commit"
+  },
+  {
+    "EventName": "VIDU_RF_NO_PIPEDOWN",
+    "EventCode": "0x00000082",
+    "BriefDescription": "Vector IDU register file no pipedown"
+  },
+  {
+    "EventName": "VPU_PIPE0_STALL",
+    "EventCode": "0x00000083",
+    "BriefDescription": "VPU pipe0 stall time"
+  },
+  {
+    "EventName": "VPU_PIPE1_STALL",
+    "EventCode": "0x00000084",
+    "BriefDescription": "VPU pipe1 stall time"
+  },
+  {
+    "EventName": "VPU_PIPE0_STALL_STRUCT_HAZARD",
+    "EventCode": "0x00000085",
+    "BriefDescription": "VPU pipe0 stall time for struct hazard"
+  },
+  {
+    "EventName": "VPU_PIPE0_STALL_UNCOMMIT",
+    "EventCode": "0x00000086",
+    "BriefDescription": "VPU pipe0 stall time for uncommit"
+  },
+  {
+    "EventName": "VPU_PIPE0_STALL_VLSU",
+    "EventCode": "0x00000087",
+    "BriefDescription": "VPU pipe0 stall time for VLSU"
+  },
+  {
+    "EventName": "VPU_PIPE1_STALL_STRUCT_HAZARD",
+    "EventCode": "0x00000088",
+    "BriefDescription": "VPU pipe1 stall time for struct hazard"
+  },
+  {
+    "EventName": "VPU_PIPE1_STALL_UNCOMMIT",
+    "EventCode": "0x00000089",
+    "BriefDescription": "VPU pipe1 stall time for uncommit"
+  },
+  {
+    "EventName": "VPU_PIPE1_STALL_VLSU",
+    "EventCode": "0x0000008a",
+    "BriefDescription": "VPU pipe1 stall time for VLSU"
+  },
+  {
+    "EventName": "VFPU_DIV_BUSY",
+    "EventCode": "0x0000008b",
+    "BriefDescription": "VFPU FDIV/VDIV busy time"
+  },
+  {
+    "EventName": "BJU_STALL_CP0",
+    "EventCode": "0x0000008c",
+    "BriefDescription": "Branch jump unit stall time for CP0"
+  },
+  {
+    "EventName": "BJU_STALL_IBUF",
+    "EventCode": "0x0000008d",
+    "BriefDescription": "Branch jump unit stall time for IBUF"
+  },
+  {
+    "EventName": "BJU_STALL_WB",
+    "EventCode": "0x0000008e",
+    "BriefDescription": "Branch jump unit stall time for writeback"
+  },
+  {
+    "EventName": "BJU_STALL_PIPEDOWN",
+    "EventCode": "0x0000008f",
+    "BriefDescription": "Branch jump unit stall time for pipedown"
+  },
+  {
+    "EventName": "RTU_FLUSH",
+    "EventCode": "0x00000090",
+    "BriefDescription": "RTU flush count"
+  },
+  {
+    "EventName": "RTU_IU",
+    "EventCode": "0x00000091",
+    "BriefDescription": "RTU IU flush count (exclude nop)"
+  },
+  {
+    "EventName": "RTU_BJU",
+    "EventCode": "0x00000092",
+    "BriefDescription": "RTU BJU flush count (exclude nop)"
+  },
+  {
+    "EventName": "RTU_LSU",
+    "EventCode": "0x00000093",
+    "BriefDescription": "RTU LSU flush count (exclude nop)"
+  },
+  {
+    "EventName": "RTU_CP0",
+    "EventCode": "0x00000094",
+    "BriefDescription": "RTU CP0 flush count (exclude nop)"
+  },
+  {
+    "EventName": "RTU_VFPU",
+    "EventCode": "0x00000095",
+    "BriefDescription": "RTU VFPU flush count (exclude nop)"
+  },
+  {
+    "EventName": "RTU_ONLY_IU",
+    "EventCode": "0x00000096",
+    "BriefDescription": "RTU Only IU flush count (exclude nop)"
+  },
+  {
+    "EventName": "RTU_ONLY_BJU",
+    "EventCode": "0x00000097",
+    "BriefDescription": "RTU Only BJU flush count (exclude nop)"
+  },
+  {
+    "EventName": "RTU_ONLY_LSU",
+    "EventCode": "0x00000098",
+    "BriefDescription": "RTU Only LSU flush count (exclude nop)"
+  },
+  {
+    "EventName": "RTU_ONLY_CP0",
+    "EventCode": "0x00000099",
+    "BriefDescription": "RTU Only CP0 flush count (exclude nop)"
+  },
+  {
+    "EventName": "RTU_ONLY_VFPU",
+    "EventCode": "0x0000009a",
+    "BriefDescription": "RTU Only VFPU flush count (exclude nop)"
+  },
+  {
+    "EventName": "SNB_READ_CREATE_VALID",
+    "EventCode": "0x000000a7",
+    "BriefDescription": "Snb read create valid"
+  },
+  {
+    "EventName": "SNB_READ_CREATE_STALL",
+    "EventCode": "0x000000a8",
+    "BriefDescription": "Snb read create stall"
+  },
+  {
+    "EventName": "SNB_WRITE_CREATE_VALID",
+    "EventCode": "0x000000a9",
+    "BriefDescription": "Snb write create valid"
+  },
+  {
+    "EventName": "SNB_WRITE_CREATE_STALL",
+    "EventCode": "0x000000aa",
+    "BriefDescription": "Snb write create stall"
+  },
+  {
+    "EventName": "IQ_FULL",
+    "EventCode": "0x000000ab",
+    "BriefDescription": "Instruction quene full time"
+  },
+  {
+    "EventName": "VIDU_VEC0_STALL",
+    "EventCode": "0x000000ac",
+    "BriefDescription": "Vector IDU Vec0 stall time"
+  },
+  {
+    "EventName": "VIDU_VEC1_STALL",
+    "EventCode": "0x000000ad",
+    "BriefDescription": "Vector IDU Vec1 stall time"
+  },
+  {
+    "EventName": "VIDU_VEC0_STALL_DEPEND",
+    "EventCode": "0x000000ae",
+    "BriefDescription": "Vector IDU Vec0 stall time for dependency"
+  },
+  {
+    "EventName": "VIDU_VEC0_STALL_STRUCT_HAZARD",
+    "EventCode": "0x000000af",
+    "BriefDescription": "Vector IDU Vec0 stall time for struct hazard"
+  },
+  {
+    "EventName": "VIDU_VEC1_STALL_DEPEND",
+    "EventCode": "0x000000b0",
+    "BriefDescription": "Vector IDU Vec1 stall time for dependency"
+  },
+  {
+    "EventName": "VIDU_VEC1_STALL_STRUCT_HAZARD",
+    "EventCode": "0x000000b1",
+    "BriefDescription": "Vector IDU Vec1 stall time for struct hazard"
+  },
+  {
+    "EventName": "VIDU_CYCLE",
+    "EventCode": "0x000000b2",
+    "BriefDescription": "Vector IDU total cycle"
+  },
+  {
+    "EventName": "VIDU_VEC0_CYCLE",
+    "EventCode": "0x000000b3",
+    "BriefDescription": "Vector IDU Vec0 cycle"
+  },
+  {
+    "EventName": "VIDU_VEC1_CYCLE",
+    "EventCode": "0x000000b4",
+    "BriefDescription": "Vector IDU Vec1 cycle"
+  }
+]
