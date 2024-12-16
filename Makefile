@@ -1310,6 +1310,14 @@ export INSTALL_DTBS_PATH ?= $(INSTALL_PATH)/dtbs/$(KERNELRELEASE)
 MODLIB	= $(INSTALL_MOD_PATH)/lib/modules/$(KERNELRELEASE)
 export MODLIB
 
+#
+# INSTALL_EXTMOD_BUILD_PATH specifies a prefix for module directory
+# relocations required by external module build roots. This is not defined
+# in the makefile but the argument can be passed to make if needed.
+# Otherwise it defaults to the "build" subdir of module install path
+#
+export INSTALL_EXTMOD_BUILD_PATH ?= $(MODLIB)/build
+
 PHONY += prepare0
 
 ifeq ($(KBUILD_EXTMOD),)
@@ -1383,9 +1391,12 @@ include/config/kernel.release: FORCE
 # Additional helpers built in scripts/
 # Carefully list dependencies so we do not try to build scripts twice
 # in parallel
-PHONY += scripts
+PHONY += scripts scripts_install
 scripts: scripts_basic scripts_dtc
 	$(Q)$(MAKE) $(build)=$(@)
+
+scripts_install: scripts
+	$(Q)$(srctree)/scripts/package/install-extmod-build $(INSTALL_EXTMOD_BUILD_PATH)
 
 # Things we need to do before we recursively start building the kernel
 # or the modules are listed in "prepare".
