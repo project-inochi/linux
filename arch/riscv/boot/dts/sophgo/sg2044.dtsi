@@ -10,6 +10,7 @@
 
 #include "sg2044-cpus.dtsi"
 #include "sg2044-reset.h"
+#include "sg2044-pcie.dtsi"
 
 / {
 	compatible = "sophgo,sg2044";
