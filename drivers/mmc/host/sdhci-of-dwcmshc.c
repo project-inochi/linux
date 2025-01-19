@@ -149,9 +149,11 @@
 
 #define PHY_PAD_TXSLEW_CTRL_P_MASK	GENMASK(8, 5) /* bits [8:5] */
 #define PHY_PAD_TXSLEW_CTRL_P		0x3 /* Slew control for P-Type pad TX */
+#define PHY_PAD_TXSLEW_CTRL_P_EIC7700	0x2 /* Slew control for N-Type pad TX for EIC7700 */
 #define PHY_PAD_TXSLEW_CTRL_N_MASK	GENMASK(12, 9) /* bits [12:9] */
 #define PHY_PAD_TXSLEW_CTRL_N		0x3 /* Slew control for N-Type pad TX */
 #define PHY_PAD_TXSLEW_CTRL_N_SG2042	0x2 /* Slew control for N-Type pad TX for SG2042 */
+#define PHY_PAD_TXSLEW_CTRL_N_EIC7700	0x2 /* Slew control for N-Type pad TX for EIC7700 */
 
 /* PHY CLK delay line settings */
 #define PHY_SDCLKDL_CNFG_R		(DWC_MSHC_PTR_PHY_R + 0x1d)
@@ -1113,6 +1115,61 @@ static int sg2042_init(struct device *dev, struct sdhci_host *host,
 					     ARRAY_SIZE(clk_ids), clk_ids);
 }
 
+// static inline void eic7700_sdhci_phy_init(struct sdhci_host *host)
+// {
+// 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+// 	struct dwcmshc_priv *priv = sdhci_pltfm_priv(pltfm_host);
+// 	u32 val;
+
+// 	/* Asset phy reset & set tx drive strength */
+// 	val = sdhci_readl(host, PHY_CNFG_R);
+// 	val &= ~PHY_CNFG_RSTN_DEASSERT;
+// 	val |= FIELD_PREP(PHY_CNFG_PHY_PWRGOOD_MASK, 1);
+// 	val |= FIELD_PREP(PHY_CNFG_PAD_SP_MASK, PHY_CNFG_PAD_SP);
+// 	val |= FIELD_PREP(PHY_CNFG_PAD_SN_MASK, PHY_CNFG_PAD_SN);
+// 	sdhci_writel(host, val, PHY_CNFG_R);
+
+// 	/* Configure phy pads */
+// 	val = PHY_PAD_RXSEL_1V8;
+// 	val |= FIELD_PREP(PHY_PAD_WEAKPULL_MASK, PHY_PAD_WEAKPULL_PULLUP);
+// 	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_P_MASK, PHY_PAD_TXSLEW_CTRL_P_EIC7700);
+// 	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_N_MASK, PHY_PAD_TXSLEW_CTRL_N_EIC7700);
+// 	sdhci_writew(host, val, PHY_CMDPAD_CNFG_R);
+// 	sdhci_writew(host, val, PHY_DATAPAD_CNFG_R);
+// 	sdhci_writew(host, val, PHY_RSTNPAD_CNFG_R);
+
+// 	val = FIELD_PREP(PHY_PAD_TXSLEW_CTRL_P_MASK, PHY_PAD_TXSLEW_CTRL_P_EIC7700);
+// 	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_N_MASK, PHY_PAD_TXSLEW_CTRL_N_EIC7700);
+// 	sdhci_writew(host, val, PHY_CLKPAD_CNFG_R);
+
+// 	val = PHY_PAD_RXSEL_1V8;
+// 	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_P_MASK, PHY_PAD_TXSLEW_CTRL_P_EIC7700);
+// 	val |= FIELD_PREP(PHY_PAD_TXSLEW_CTRL_N_MASK, PHY_PAD_TXSLEW_CTRL_N_EIC7700);
+// 	sdhci_writew(host, val, PHY_STBPAD_CNFG_R);
+
+// 	// TODO: config delay
+// 	/* disable delay line */
+// 	sdhci_writeb(host, PHY_SDCLKDL_CNFG_UPDATE, PHY_SDCLKDL_CNFG_R);
+
+// 	/* set delay line */
+// 	sdhci_writeb(host, priv->delay_line, PHY_SDCLKDL_DC_R);
+
+// 	/* enable delay lane */
+// 	val = sdhci_readb(host, PHY_SDCLKDL_CNFG_R);
+// 	val &= ~(PHY_SDCLKDL_CNFG_UPDATE);
+// 	sdhci_writeb(host, val, PHY_SDCLKDL_CNFG_R);
+// }
+
+static void eic7700_sdhci_reset(struct sdhci_host *host, u8 mask)
+{
+	sdhci_reset(host, mask);
+
+	if (mask & SDHCI_RESET_ALL)
+		dwcmshc_phy_1_8v_init(host);
+		// eic7700_sdhci_phy_init(host);
+}
+
+
 static const struct sdhci_ops sdhci_dwcmshc_ops = {
 	.set_clock		= sdhci_set_clock,
 	.set_bus_width		= sdhci_set_bus_width,
@@ -1145,6 +1202,19 @@ static const struct sdhci_ops sdhci_dwcmshc_bf3_ops = {
 	.hw_reset		= dwcmshc_bf3_hw_reset,
 };
 #endif
+
+static const struct sdhci_ops sdhci_dwcmshc_eic7700_ops = {
+	.set_clock		= sdhci_set_clock,
+	.get_max_clock		= sdhci_pltfm_clk_get_max_clock,
+	.get_timeout_clock	= sdhci_pltfm_clk_get_max_clock,
+	.set_bus_width		= sdhci_set_bus_width,
+	.set_uhs_signaling	= dwcmshc_set_uhs_signaling,
+	.set_power		= sdhci_set_power_and_bus_voltage,
+	.reset			= eic7700_sdhci_reset,
+	.adma_write_desc	= dwcmshc_adma_write_desc,
+	.irq			= dwcmshc_cqe_irq_handler,
+	.platform_execute_tuning = th1520_execute_tuning, // TODO: test
+};
 
 static const struct sdhci_ops sdhci_dwcmshc_rk35xx_ops = {
 	.set_clock		= dwcmshc_rk3568_set_clock,
@@ -1205,6 +1275,18 @@ static const struct dwcmshc_pltfm_data sdhci_dwcmshc_bf3_pdata = {
 	},
 };
 #endif
+
+static const struct dwcmshc_pltfm_data sdhci_dwcmshc_eic7700_pdata = {
+	.pdata = {
+		.ops = &sdhci_dwcmshc_eic7700_ops,
+		.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+			  SDHCI_QUIRK_BROKEN_TIMEOUT_VAL,
+		.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
+			   SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
+	},
+	.init = dwcmshc_rk35xx_init,
+	.postinit = dwcmshc_rk35xx_postinit,
+};
 
 static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk35xx_pdata = {
 	.pdata = {
@@ -1312,6 +1394,10 @@ dsbl_cqe_caps:
 }
 
 static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
+	{
+		.compatible = "eswin,eic7700-dwcmshc",
+		.data = &sdhci_dwcmshc_eic7700_pdata,
+	},
 	{
 		.compatible = "rockchip,rk3588-dwcmshc",
 		.data = &sdhci_dwcmshc_rk35xx_pdata,
