@@ -57,6 +57,7 @@ properties:
           - const: andestech,nceplic100
       - items:
           - enum:
+              - eswin,eic7700-plic
               - canaan,k210-plic
               - sifive,fu540-c000-plic
               - starfive,jh7100-plic
