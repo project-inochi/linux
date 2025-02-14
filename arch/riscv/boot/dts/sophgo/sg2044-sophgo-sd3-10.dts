@@ -72,6 +72,10 @@
 	rx-internal-delay-ps = <2050>;
 };
 
+&pwm {
+	status = "okay";
+};
+
 &sd {
 	bus-width = <4>;
 	no-sdio;
