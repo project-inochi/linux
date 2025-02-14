@@ -455,6 +455,7 @@ MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
 static const struct acpi_device_id dw_spi_mmio_acpi_match[] = {
 	{"HISI0173", (kernel_ulong_t)dw_spi_pssi_init},
 	{"LECA0002", (kernel_ulong_t)dw_spi_hssi_no_dma_init},
+	{"SOPH0004", (kernel_ulong_t)dw_spi_pssi_init},
 	{},
 };
 MODULE_DEVICE_TABLE(acpi, dw_spi_mmio_acpi_match);
