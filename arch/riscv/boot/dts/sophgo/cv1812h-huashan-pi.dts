@@ -55,6 +55,16 @@
 	non-removable;
 };
 
+&gmac0 {
+	status = "okay";
+	phy-handle = <&internal_ephy>;
+	phy-mode = "internal";
+};
+
+&mdio {
+	status = "okay";
+};
+
 &sdhci0 {
 	status = "okay";
 	bus-width = <4>;
