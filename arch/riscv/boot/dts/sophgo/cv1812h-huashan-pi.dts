@@ -57,10 +57,25 @@
 
 &gmac0 {
 	status = "okay";
+	pinctrl-0 = <&gmac0_cfg>;
+	pinctrl-names = "default";
 };
 
 &mdio {
 	status = "okay";
+};
+
+&pinctrl {
+	gmac0_cfg: gamc0-cfg {
+		gmac0-led-pins {
+			pinmux = <PINMUX(PIN_PWR_WAKEUP0, 6)>,
+				 <PINMUX(PIN_PWR_BUTTON1, 6)>;
+			bias-pull-up;
+			bias-pull-down;
+			drive-strength-microamp = <18700>;
+			power-source = <3300>;
+		};
+	};
 };
 
 &sdhci0 {
