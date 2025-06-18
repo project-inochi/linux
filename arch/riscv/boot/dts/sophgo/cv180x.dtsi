@@ -160,6 +160,86 @@
 			};
 		};
 
+		timer0: timer@30a0000 {
+			compatible = "snps,dw-apb-timer";
+			reg = <0x30a0000 0x14>;
+			clocks = <&clk CLK_TIMER0>;
+			clock-names = "timer";
+			interrupts = <SOC_PERIPHERAL_IRQ(63) IRQ_TYPE_LEVEL_HIGH>;
+			resets = <&rst RST_TIMER0>;
+			status = "disabled";
+		};
+
+		timer1: timer@30a0014 {
+			compatible = "snps,dw-apb-timer";
+			reg = <0x30a0014 0x14>;
+			clocks = <&clk CLK_TIMER1>;
+			clock-names = "timer";
+			interrupts = <SOC_PERIPHERAL_IRQ(64) IRQ_TYPE_LEVEL_HIGH>;
+			resets = <&rst RST_TIMER1>;
+			status = "disabled";
+		};
+
+		timer2: timer@30a0028 {
+			compatible = "snps,dw-apb-timer";
+			reg = <0x30a0028 0x14>;
+			clocks = <&clk CLK_TIMER2>;
+			clock-names = "timer";
+			interrupts = <SOC_PERIPHERAL_IRQ(65) IRQ_TYPE_LEVEL_HIGH>;
+			resets = <&rst RST_TIMER2>;
+			status = "disabled";
+		};
+
+		timer3: timer@30a003c {
+			compatible = "snps,dw-apb-timer";
+			reg = <0x30a003c 0x14>;
+			clocks = <&clk CLK_TIMER3>;
+			clock-names = "timer";
+			interrupts = <SOC_PERIPHERAL_IRQ(66) IRQ_TYPE_LEVEL_HIGH>;
+			resets = <&rst RST_TIMER3>;
+			status = "disabled";
+		};
+
+		timer4: timer@30a0050 {
+			compatible = "snps,dw-apb-timer";
+			reg = <0x30a0050 0x14>;
+			clocks = <&clk CLK_TIMER4>;
+			clock-names = "timer";
+			interrupts = <SOC_PERIPHERAL_IRQ(67) IRQ_TYPE_LEVEL_HIGH>;
+			resets = <&rst RST_TIMER4>;
+			status = "disabled";
+		};
+
+		timer5: timer@30a0064 {
+			compatible = "snps,dw-apb-timer";
+			reg = <0x30a0064 0x14>;
+			clocks = <&clk CLK_TIMER5>;
+			clock-names = "timer";
+			interrupts = <SOC_PERIPHERAL_IRQ(68) IRQ_TYPE_LEVEL_HIGH>;
+			resets = <&rst RST_TIMER5>;
+			status = "disabled";
+		};
+
+		timer6: timer@30a0078 {
+			compatible = "snps,dw-apb-timer";
+			reg = <0x30a0078 0x14>;
+			clocks = <&clk CLK_TIMER6>;
+			clock-names = "timer";
+			interrupts = <SOC_PERIPHERAL_IRQ(69) IRQ_TYPE_LEVEL_HIGH>;
+			resets = <&rst RST_TIMER6>;
+			status = "disabled";
+		};
+
+		timer7: timer@30a008c {
+			compatible = "snps,dw-apb-timer";
+			reg = <0x30a008c 0x14>;
+			clocks = <&clk CLK_TIMER7>;
+			clock-names = "timer";
+			interrupts = <SOC_PERIPHERAL_IRQ(70) IRQ_TYPE_LEVEL_HIGH>;
+			resets = <&rst RST_TIMER7>;
+			status = "disabled";
+		};
+
 		saradc: adc@30f0000 {
 			compatible = "sophgo,cv1800b-saradc";
 			reg = <0x030f0000 0x1000>;
