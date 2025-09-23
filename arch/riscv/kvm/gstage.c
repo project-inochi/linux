@@ -394,6 +394,8 @@ bool kvm_riscv_gstage_op_pte(struct kvm_gstage *gstage, gpa_t addr,
 			set_pte(ptep, __pte(0));
 		else if (op == GSTAGE_OP_WP)
 			set_pte(ptep, __pte(pte_val(ptep_get(ptep)) & ~_PAGE_WRITE));
+		else if (op == GSTAGE_OP_CLEAD_DIRTY)
+			set_pte(ptep, __pte(pte_val(ptep_get(ptep)) & ~_PAGE_DIRTY));
 		if (pte_val(*ptep) != pte_val(old_pte))
 			flush = true;
 	}
@@ -443,7 +445,8 @@ bool kvm_riscv_gstage_unmap_range(struct kvm_gstage *gstage,
 	return flush;
 }
 
-bool kvm_riscv_gstage_wp_range(struct kvm_gstage *gstage, gpa_t start, gpa_t end)
+bool kvm_riscv_gstage_op_range(struct kvm_gstage *gstage, gpa_t start, gpa_t end,
+			       enum kvm_riscv_gstage_op op)
 {
 	int ret;
 	pte_t *ptep;
@@ -464,7 +467,7 @@ bool kvm_riscv_gstage_wp_range(struct kvm_gstage *gstage, gpa_t start, gpa_t end
 		} else {
 			addr = ALIGN_DOWN(addr, page_size);
 			flush |= kvm_riscv_gstage_op_pte(gstage, addr, ptep,
-							 ptep_level, GSTAGE_OP_WP);
+							 ptep_level, op);
 			addr += page_size;
 		}
 	}
