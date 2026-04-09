@@ -539,6 +539,7 @@ static const struct of_device_id plic_match[] = {
 
 static const struct acpi_device_id plic_acpi_match[] = {
 	{ "RSCV0001", 0 },
+	{ "SOPH0012", (kernel_ulong_t)BIT(PLIC_QUIRK_EDGE_INTERRUPT) },
 	{}
 };
 MODULE_DEVICE_TABLE(acpi, plic_acpi_match);
@@ -636,6 +637,12 @@ static int plic_probe(struct fwnode_handle *fwnode)
 		if (!regs)
 			return -ENOMEM;
 	} else {
+		const void *data;
+
+		data = acpi_device_get_match_data(fwnode->dev);
+		if (data)
+			plic_quirks = (unsigned long)data;
+
 		regs = devm_platform_ioremap_resource(to_platform_device(fwnode->dev), 0);
 		if (IS_ERR(regs))
 			return PTR_ERR(regs);
