@@ -6,6 +6,7 @@
  * Copyright (C) 2024 Chen Wang <unicorn_wang@outlook.com>
  */
 
+#include <linux/acpi.h>
 #include <linux/cleanup.h>
 #include <linux/io.h>
 #include <linux/irq.h>
@@ -13,6 +14,7 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/msi.h>
+#include <linux/pci.h>
 #include <linux/platform_device.h>
 #include <linux/property.h>
 #include <linux/slab.h>
@@ -245,6 +247,32 @@ static int sg204x_msi_init_domains(struct sg204x_msi_chipdata *data,
 	return 0;
 }
 
+#ifdef CONFIG_ACPI
+static struct fwnode_handle *sg2042_msi_fwnode;
+
+static struct fwnode_handle *sg2042_msi_get_fwnode(struct device *dev)
+{
+	return sg2042_msi_fwnode;
+}
+
+static void sg2042_msi_acpi_init(struct device *dev)
+{
+	struct acpi_device* adev = ACPI_COMPANION(dev);
+
+	if (adev) {
+		sg2042_msi_fwnode = dev_fwnode(dev);
+		pci_msi_register_fwnode_provider(&sg2042_msi_get_fwnode);
+
+		if (!acpi_disabled)
+			acpi_dev_clear_dependencies(adev);
+	}
+}
+#else
+static inline void sg2042_msi_acpi_init(struct device *dev)
+{
+}
+#endif
+
 static int sg2042_msi_probe(struct platform_device *pdev)
 {
 	struct fwnode_reference_args args = { };
@@ -311,7 +339,13 @@ static int sg2042_msi_probe(struct platform_device *pdev)
 		return -ENOMEM;
 	}
 
-	return sg204x_msi_init_domains(data, plic_domain, dev);
+	ret = sg204x_msi_init_domains(data, plic_domain, dev);
+	if (ret)
+		return ret;
+
+	sg2042_msi_acpi_init(dev);
+
+	return 0;
 }
 
 static const struct sg204x_msi_chip_info sg2042_chip_info = {
@@ -330,10 +364,18 @@ static const struct of_device_id sg2042_msi_of_match[] = {
 	{ }
 };
 
+#ifdef CONFIG_ACPI
+static const struct acpi_device_id sg2044_msi_acpi_match[] = {
+	{ "SOPH0001", (kernel_ulong_t)&sg2044_chip_info },
+	{ }
+};
+#endif
+
 static struct platform_driver sg2042_msi_driver = {
 	.driver = {
 		.name		= "sg2042-msi",
 		.of_match_table	= sg2042_msi_of_match,
+		.acpi_match_table = ACPI_PTR(sg2044_msi_acpi_match),
 	},
 	.probe = sg2042_msi_probe,
 };
