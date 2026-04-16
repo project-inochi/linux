@@ -264,13 +264,13 @@ static int sg2042_msi_probe(struct platform_device *pdev)
 		return -EINVAL;
 	}
 
-	data->reg_clr = devm_platform_ioremap_resource_byname(pdev, "clr");
+	data->reg_clr = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(data->reg_clr)) {
 		dev_err(dev, "Failed to map clear register\n");
 		return PTR_ERR(data->reg_clr);
 	}
 
-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "doorbell");
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
 	if (!res) {
 		dev_err(dev, "Failed get resource from set\n");
 		return -EINVAL;
