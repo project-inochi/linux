@@ -244,6 +244,7 @@ void __init riscv_acpi_init_gsi_mapping(void)
 	/* There can be either PLIC or APLIC */
 	if (acpi_table_parse_madt(ACPI_MADT_TYPE_PLIC, riscv_acpi_plic_parse_madt, 0) > 0) {
 		acpi_get_devices("RSCV0001", riscv_acpi_create_gsi_map, NULL, NULL);
+		acpi_get_devices("SOPH0012", riscv_acpi_create_gsi_map, NULL, NULL);
 		return;
 	}
 
