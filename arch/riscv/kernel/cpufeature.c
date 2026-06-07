@@ -36,6 +36,7 @@ static bool any_cpu_has_zicboz;
 static bool any_cpu_has_zicbop;
 static bool any_cpu_has_zicbom;
 DEFINE_STATIC_KEY_FALSE(riscv_hw_pte_ad_updating);
+EXPORT_SYMBOL(riscv_hw_pte_ad_updating);
 
 unsigned long elf_hwcap __read_mostly;
 
