@@ -126,4 +126,6 @@
 #define RISCV_ISA_EXT_SUPM		RISCV_ISA_EXT_SSNPM
 #endif
 
+#define RISCV_ISA_EXT_SHDLT		125
+
 #endif /* _ASM_RISCV_HWCAP_H */
