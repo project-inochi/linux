@@ -130,6 +130,17 @@ void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
 
 void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
 {
+	struct kvm_vcpu *vcpu;
+	unsigned long i;
+
+	// TODO: check vcpu enable dirty log/shdlt
+	if (!kvm_slot_dirty_track_enabled(memslot))
+		return;
+
+	kvm_for_each_vcpu(i, vcpu, kvm)
+		kvm_vcpu_kick(vcpu);
+
+	kvm_make_all_cpus_request(kvm, KVM_REQ_FLUSH_DIRTY_LOG);
 }
 
 void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free)
