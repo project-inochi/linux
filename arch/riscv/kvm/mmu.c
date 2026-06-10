@@ -40,6 +40,26 @@ static void mmu_wp_memory_region(struct kvm *kvm, int slot)
 		kvm_flush_remote_tlbs_memslot(kvm, memslot);
 }
 
+static void mmu_split_memory_region(struct kvm *kvm, int slot)
+{
+	struct kvm_memslots *slots = kvm_memslots(kvm);
+	struct kvm_memory_slot *memslot = id_to_memslot(slots, slot);
+	phys_addr_t start = memslot->base_gfn << PAGE_SHIFT;
+	phys_addr_t end = (memslot->base_gfn + memslot->npages) << PAGE_SHIFT;
+	struct kvm_mmu_memory_cache pcache = {
+		.gfp_custom = GFP_ATOMIC | __GFP_ACCOUNT,
+		.gfp_zero = __GFP_ZERO,
+	};
+	struct kvm_gstage gstage;
+
+	kvm_riscv_gstage_init(&gstage, kvm);
+
+	write_lock(&kvm->mmu_lock);
+	kvm_riscv_gstage_split_huge_range(&gstage, &pcache, start, end, 0, false);
+	write_unlock(&kvm->mmu_lock);
+	kvm_flush_remote_tlbs_memslot(kvm, memslot);
+}
+
 int kvm_riscv_mmu_ioremap(struct kvm *kvm, gpa_t gpa, phys_addr_t hpa,
 			  unsigned long size, bool writable, bool in_atomic)
 {
@@ -187,6 +207,9 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
 		if (kvm_dirty_log_manual_protect_and_init_set(kvm))
 			return;
 		mmu_wp_memory_region(kvm, new->id);
+
+		if (kvm->arch.dirty_state.buffer_size)
+			mmu_split_memory_region(kvm, new->id);
 	}
 }
 

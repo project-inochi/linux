@@ -68,6 +68,11 @@ int kvm_riscv_gstage_split_huge(struct kvm_gstage *gstage,
 				struct kvm_mmu_memory_cache *pcache,
 				gpa_t addr, u32 target_level, bool flush);
 
+int kvm_riscv_gstage_split_huge_range(struct kvm_gstage *gstage,
+				      struct kvm_mmu_memory_cache *pcache,
+				      gpa_t start, gpa_t end,
+				      u32 target_level, bool flush);
+
 enum kvm_riscv_gstage_op {
 	GSTAGE_OP_NOP = 0,	/* Nothing */
 	GSTAGE_OP_CLEAR,	/* Clear/Unmap */

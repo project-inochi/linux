@@ -356,6 +356,46 @@ int kvm_riscv_gstage_split_huge(struct kvm_gstage *gstage,
 	return 0;
 }
 
+int kvm_riscv_gstage_split_huge_range(struct kvm_gstage *gstage,
+				      struct kvm_mmu_memory_cache *pcache,
+				      gpa_t start, gpa_t end,
+				      u32 target_level, bool flush)
+{
+	unsigned long page_size;
+	unsigned long step;
+	bool found_leaf;
+	u32 ptep_level;
+	pte_t *ptep;
+	int ret;
+
+	if (!pcache)
+		return -ENOMEM;
+
+	if (unlikely(gstage_level_to_page_order(gstage, target_level + 1, &step)))
+		return -EINVAL;
+
+	while(start < end) {
+		found_leaf = kvm_riscv_gstage_get_leaf(gstage, start, &ptep, &ptep_level);
+
+		if (!found_leaf) {
+			start = ALIGN_DOWN(start + step, step);
+			continue;
+		}
+
+		ret = gstage_level_to_page_size(gstage, ptep_level, &page_size);
+		if (ret)
+			break;
+
+		if (page_size >= step)
+			kvm_riscv_gstage_split_huge(gstage, pcache, start, target_level, flush);
+
+		page_size = max(page_size, step);
+		start = ALIGN_DOWN(start + page_size, page_size);
+	}
+
+	return 0;
+}
+
 bool kvm_riscv_gstage_op_pte(struct kvm_gstage *gstage, gpa_t addr,
 			     pte_t *ptep, u32 ptep_level, enum kvm_riscv_gstage_op op)
 {
