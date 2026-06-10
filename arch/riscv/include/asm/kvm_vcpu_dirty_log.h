@@ -24,6 +24,12 @@
 #define DIRTY_LOG_BUFFER_SIZE(order)	(1 << ((order) + 12 - 2))
 #endif
 
+struct kvm_dirty_state {
+	unsigned int entry_size;
+	unsigned int buffer_order;
+	unsigned int buffer_size;
+};
+
 struct kvm_vcpu_dirty_log_csr {
 	unsigned long status;
 };
@@ -33,9 +39,9 @@ struct kvm_vcpu_dirty_log {
 
 	unsigned long			*buffer;
 	phys_addr_t			buffer_phys;
-	int				order;
 };
 
+void kvm_riscv_dirty_log_init(struct kvm *kvm);
 int kvm_riscv_vcpu_alloc_dirty_buffer(struct kvm_vcpu *vcpu, int size);
 void kvm_riscv_vcpu_dirty_log_deinit(struct kvm_vcpu *vcpu);
 void kvm_riscv_vcpu_dirty_log_load(struct kvm_vcpu *vcpu);

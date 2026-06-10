@@ -9,59 +9,72 @@
 #include <asm/kvm_nacl.h>
 #include <asm/kvm_vcpu_dirty_log.h>
 
-void kvm_riscv_vcpu_dirty_log_deinit(struct kvm_vcpu *vcpu)
+int kvm_cpu_dirty_log_size(struct kvm *kvm)
 {
-	struct kvm_vcpu_dirty_log *dirty_log = &vcpu->arch.dirty_log;
+	return kvm->arch.dirty_state.entry_size;
+}
 
-	if (dirty_log->order < 0)
+void kvm_riscv_dirty_log_init(struct kvm *kvm)
+{
+	struct kvm_dirty_state *dirty_state = &kvm->arch.dirty_state;
+
+	dirty_state->buffer_size = 0;
+	dirty_state->entry_size = 0;
+
+	if (!riscv_isa_extension_available(NULL, SHDLT))
 		return;
 
-	free_pages((unsigned long)dirty_log->buffer, dirty_log->order);
+	dirty_state->buffer_size = PAGE_SIZE;
+	dirty_state->entry_size = DIRTY_LOG_BUFFER_SIZE(dirty_state->buffer_size);
+	dirty_state->buffer_order = get_order(dirty_state->buffer_size);
+}
+
+void kvm_riscv_vcpu_dirty_log_deinit(struct kvm_vcpu *vcpu)
+{
+	struct kvm_dirty_state *dirty_state = &vcpu->kvm->arch.dirty_state;
+	struct kvm_vcpu_dirty_log *dirty_log = &vcpu->arch.dirty_log;
+
+	if (dirty_state->buffer_size)
+		return;
+
+	free_pages((unsigned long)dirty_log->buffer, dirty_state->buffer_order);
 	dirty_log->buffer = NULL;
-	dirty_log->order = -1;
 }
 
 int kvm_riscv_vcpu_alloc_dirty_buffer(struct kvm_vcpu *vcpu, int size)
 {
+	struct kvm_dirty_state *dirty_state = &vcpu->kvm->arch.dirty_state;
 	struct kvm_vcpu_dirty_log *dirty_log = &vcpu->arch.dirty_log;
 	struct page* dirty_buffer;
-	unsigned int order;
 
 	dirty_log->buffer = NULL;
 	dirty_log->buffer_phys = 0;
-	dirty_log->order = -1;
 	dirty_log->csr.status = 0;
 
-	// if (size < 0 || size > KVM_VCPU_DIRTY_LOG_BUFFER_MAX_SIZE)
-	// 	return -EINVAL;
+	if (dirty_state->buffer_size)
+		return 0;
 
-	// if (size == 0)
-	// 	return 0;
-
-	// order = get_order(size);
-	order = 1;
-
-	dirty_buffer = alloc_pages(GFP_KERNEL, order);
+	dirty_buffer = alloc_pages(GFP_KERNEL, dirty_state->buffer_order);
 	if (!dirty_buffer)
 		return -ENOMEM;
 
 	dirty_log->buffer = page_to_virt(dirty_buffer);
 	dirty_log->buffer_phys = page_to_phys(dirty_buffer);
-	dirty_log->order = order;
 
 	return 0;
 }
 
 void kvm_riscv_vcpu_dirty_log_load(struct kvm_vcpu *vcpu)
 {
+	struct kvm_dirty_state *dirty_state = &vcpu->kvm->arch.dirty_state;
 	struct kvm_vcpu_dirty_log *dirty_log = &vcpu->arch.dirty_log;
 	unsigned long ctrl;
 
-	if (dirty_log->order < 0)
+	if (dirty_state->buffer_size)
 		return;
 
 	ctrl = FIELD_PREP(HGDLTCTL_PPN, dirty_log->buffer_phys >> PAGE_SHIFT) |
-	       FIELD_PREP(HGDLTCTL_SIZE, dirty_log->order - 1) |
+	       FIELD_PREP(HGDLTCTL_SIZE, dirty_state->buffer_order) |
 	       HGDLTCTL_EN;
 
 	ncsr_write(CSR_HGDLTCTL, ctrl);
@@ -70,9 +83,10 @@ void kvm_riscv_vcpu_dirty_log_load(struct kvm_vcpu *vcpu)
 
 void kvm_riscv_vcpu_dirty_log_put(struct kvm_vcpu *vcpu)
 {
+	struct kvm_dirty_state *dirty_state = &vcpu->kvm->arch.dirty_state;
 	struct kvm_vcpu_dirty_log *dirty_log = &vcpu->arch.dirty_log;
 
-	if (dirty_log->order < 0)
+	if (dirty_state->buffer_size)
 		return;
 
 	dirty_log->csr.status = ncsr_read(CSR_HGDLTIDX);
@@ -80,13 +94,14 @@ void kvm_riscv_vcpu_dirty_log_put(struct kvm_vcpu *vcpu)
 
 void kvm_riscv_vcpu_flush_dirty_buffer(struct kvm_vcpu *vcpu)
 {
+	struct kvm_dirty_state *dirty_state = &vcpu->kvm->arch.dirty_state;
 	struct kvm_vcpu_dirty_log *dirty_log = &vcpu->arch.dirty_log;
 	unsigned long size, i;
 
 	if (!arch_has_hw_pte_young())
 		return;
 
-	if (dirty_log->order < 0)
+	if (dirty_state->buffer_size)
 		return;
 
 	size = FIELD_GET(HGDLTIDX_INDEX, dirty_log->csr.status);

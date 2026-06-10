@@ -95,6 +95,9 @@ struct kvm_arch {
 	/* AIA Guest/VM context */
 	struct kvm_aia aia;
 
+	/* Dirty log Guest/VM context */
+	struct kvm_dirty_state dirty_state;
+
 	/* KVM_CAP_RISCV_MP_STATE_RESET */
 	bool mp_state_reset;
 };

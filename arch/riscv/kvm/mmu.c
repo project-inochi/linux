@@ -28,7 +28,7 @@ static void mmu_wp_memory_region(struct kvm *kvm, int slot)
 
 	kvm_riscv_gstage_init(&gstage, kvm);
 
-	if (riscv_isa_extension_available(NULL, SVADU))
+	if (kvm->arch.dirty_state.buffer_size)
 		op = GSTAGE_OP_CLEAD_DIRTY;
 	else
 		op = GSTAGE_OP_WP;
@@ -117,7 +117,7 @@ void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
 
 	kvm_riscv_gstage_init(&gstage, kvm);
 
-	if (riscv_isa_extension_available(NULL, SVADU))
+	if (kvm->arch.dirty_state.buffer_size)
 		op = GSTAGE_OP_CLEAD_DIRTY;
 	else
 		op = GSTAGE_OP_WP;

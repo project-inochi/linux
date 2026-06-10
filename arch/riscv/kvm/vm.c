@@ -46,6 +46,8 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
 
 	kvm_riscv_guest_timer_init(kvm);
 
+	kvm_riscv_dirty_log_init(kvm);
+
 	return 0;
 }
 
