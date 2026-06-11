@@ -17,12 +17,12 @@
 #ifdef CONFIG_64BIT
 #define DIRTY_LOG_ENTRY_PFN		DIRTY_LOG_ENTRY64_PFN
 #define DIRTY_LOG_ENTRY_SIZE		8
-#define DIRTY_LOG_BUFFER_SIZE(order)	(1 << ((order) + 12 - 3))
 #else
 #define DIRTY_LOG_ENTRY_PFN		DIRTY_LOG_ENTRY32_PFN
 #define DIRTY_LOG_ENTRY_SIZE		4
-#define DIRTY_LOG_BUFFER_SIZE(order)	(1 << ((order) + 12 - 2))
 #endif
+
+#define DIRTY_LOG_BUFFER_CAPACITY(size)	((size) / DIRTY_LOG_ENTRY_SIZE)
 
 struct kvm_dirty_state {
 	unsigned int entry_size;
