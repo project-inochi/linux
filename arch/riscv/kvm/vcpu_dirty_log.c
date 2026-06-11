@@ -49,7 +49,6 @@ int kvm_riscv_vcpu_alloc_dirty_buffer(struct kvm_vcpu *vcpu, int size)
 
 	dirty_log->buffer = NULL;
 	dirty_log->buffer_phys = 0;
-	dirty_log->csr.status = 0;
 
 	if (!dirty_state->buffer_size)
 		return 0;
@@ -78,18 +77,12 @@ void kvm_riscv_vcpu_dirty_log_load(struct kvm_vcpu *vcpu)
 	       HGDLTCTL_EN;
 
 	ncsr_write(CSR_HGDLTCTL, ctrl);
-	ncsr_write(CSR_HGDLTIDX, dirty_log->csr.status);
+	ncsr_write(CSR_HGDLTIDX, 0);
 }
 
 void kvm_riscv_vcpu_dirty_log_put(struct kvm_vcpu *vcpu)
 {
-	struct kvm_dirty_state *dirty_state = &vcpu->kvm->arch.dirty_state;
-	struct kvm_vcpu_dirty_log *dirty_log = &vcpu->arch.dirty_log;
-
-	if (!dirty_state->buffer_size)
-		return;
-
-	dirty_log->csr.status = ncsr_read(CSR_HGDLTIDX);
+	kvm_riscv_vcpu_flush_dirty_buffer(vcpu);
 }
 
 void kvm_riscv_vcpu_flush_dirty_buffer(struct kvm_vcpu *vcpu)
@@ -101,7 +94,7 @@ void kvm_riscv_vcpu_flush_dirty_buffer(struct kvm_vcpu *vcpu)
 	if (!dirty_state->buffer_size)
 		return;
 
-	size = FIELD_GET(HGDLTIDX_INDEX, dirty_log->csr.status);
+	size = ncsr_read(CSR_HGDLTIDX);
 
 	if (size == 0)
 		return;
@@ -112,5 +105,5 @@ void kvm_riscv_vcpu_flush_dirty_buffer(struct kvm_vcpu *vcpu)
 		kvm_vcpu_mark_page_dirty(vcpu, gpa >> PAGE_SHIFT);
 	}
 
-	dirty_log->csr.status = 0;
+	ncsr_write(CSR_HGDLTIDX, 0);
 }

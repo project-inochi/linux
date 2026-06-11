@@ -30,13 +30,7 @@ struct kvm_dirty_state {
 	unsigned int buffer_size;
 };
 
-struct kvm_vcpu_dirty_log_csr {
-	unsigned long status;
-};
-
 struct kvm_vcpu_dirty_log {
-	struct kvm_vcpu_dirty_log_csr	csr;
-
 	unsigned long			*buffer;
 	phys_addr_t			buffer_phys;
 };
