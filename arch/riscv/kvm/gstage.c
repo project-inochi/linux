@@ -190,7 +190,6 @@ static void kvm_riscv_gstage_update_pte_prot(struct kvm_gstage *gstage, u32 leve
 			return;
 
 		new_pte = pfn_pte(pte_pfn(old_pte), prot);
-		new_pte = pte_mkdirty(new_pte);
 
 		if (kvm_riscv_gstage_try_update_pte(gstage, level, addr, ptep,
 						    old_pte, new_pte))
@@ -203,7 +202,7 @@ static void kvm_riscv_gstage_update_pte_prot(struct kvm_gstage *gstage, u32 leve
 int kvm_riscv_gstage_map_page(struct kvm_gstage *gstage,
 			      struct kvm_mmu_memory_cache *pcache,
 			      gpa_t gpa, phys_addr_t hpa, unsigned long page_size,
-			      bool page_rdonly, bool page_exec,
+			      bool page_rdonly, bool page_exec, bool page_dirty,
 			      struct kvm_gstage_mapping *out_map)
 {
 	bool found_leaf;
@@ -243,6 +242,8 @@ int kvm_riscv_gstage_map_page(struct kvm_gstage *gstage,
 		else
 			prot = PAGE_WRITE;
 	}
+	if (page_dirty)
+		prot = __pgprot(pgprot_val(prot) | _PAGE_DIRTY);
 
 	found_leaf = kvm_riscv_gstage_get_leaf(gstage, gpa, &ptep, &ptep_level);
 	if (found_leaf) {
@@ -281,7 +282,6 @@ int kvm_riscv_gstage_map_page(struct kvm_gstage *gstage,
 	}
 
 	out_map->pte = pfn_pte(PFN_DOWN(hpa), prot);
-	out_map->pte = pte_mkdirty(out_map->pte);
 
 	return kvm_riscv_gstage_set_pte(gstage, pcache, out_map);
 }

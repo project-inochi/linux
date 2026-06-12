@@ -591,6 +591,7 @@ int kvm_riscv_mmu_map(struct kvm_vcpu *vcpu, struct kvm_memory_slot *memslot,
 	struct kvm_mmu_memory_cache *pcache = &vcpu->arch.mmu_page_cache;
 	bool logging = kvm_slot_dirty_track_enabled(memslot) &&
 		       !(memslot->flags & KVM_MEM_READONLY);
+	bool use_wp = vcpu->kvm->arch.dirty_state.buffer_size == 0;
 	unsigned long vma_pagesize, mmu_seq;
 	struct kvm_gstage gstage;
 	struct page *page;
@@ -670,7 +671,7 @@ int kvm_riscv_mmu_map(struct kvm_vcpu *vcpu, struct kvm_memory_slot *memslot,
 	 * If logging is active then we allow writable pages only
 	 * for write faults.
 	 */
-	if (logging && !is_write)
+	if (logging && use_wp && !is_write)
 		writable = false;
 
 	write_lock(&kvm->mmu_lock);
@@ -687,12 +688,17 @@ int kvm_riscv_mmu_map(struct kvm_vcpu *vcpu, struct kvm_memory_slot *memslot,
 		vma_pagesize = transparent_hugepage_adjust(kvm, memslot, hva, &hfn, &gpa);
 
 	if (writable) {
-		mark_page_dirty_in_slot(kvm, memslot, gfn);
+		if (use_wp)
+			mark_page_dirty_in_slot(kvm, memslot, gfn);
+
 		ret = kvm_riscv_gstage_map_page(&gstage, pcache, gpa, hfn << PAGE_SHIFT,
-						vma_pagesize, false, true, out_map);
+						vma_pagesize, false, true,
+						use_wp || !logging,
+						out_map);
 	} else {
 		ret = kvm_riscv_gstage_map_page(&gstage, pcache, gpa, hfn << PAGE_SHIFT,
-						vma_pagesize, true, true, out_map);
+						vma_pagesize, true, true, false,
+						out_map);
 	}
 
 	if (ret)
