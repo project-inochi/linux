@@ -14,6 +14,7 @@
 #include <linux/mutex.h>
 #include <linux/nvmem-provider.h>
 #include <linux/platform_device.h>
+#include <linux/slab.h>
 
 #define SG2044_EFUSE_CONTENT_SIZE		0x400
 
