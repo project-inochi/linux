@@ -6,6 +6,7 @@
 /dts-v1/;
 
 #include "sg2044.dtsi"
+#include "sg2044-pcie-legacy-layout.dtsi"
 
 / {
 	model = "Sophgo SG2044 SRD3-10";
