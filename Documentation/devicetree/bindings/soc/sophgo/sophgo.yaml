@@ -53,6 +53,7 @@ properties:
       - items:
           - enum:
               - sophgo,srd3-10
+              - sophgo,srd3-10-uefi
           - const: sophgo,sg2044
 
 additionalProperties: true
